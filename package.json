@@ -1,0 +1,81 @@
+{
+  "name": "@rainersoft/utils",
+  "version": "1.0.0",
+  "description": "Utilitários universais para formatação, conversão e manipulação de dados - Web, Desktop e Mobile",
+  "packageManager": "pnpm@9.0.0",
+  "author": {
+    "name": "Rainer Teixeira",
+    "email": "suporte@rainersoft.com.br"
+  },
+  "license": "MIT",
+  "keywords": [
+    "utils",
+    "utilities",
+    "formatters",
+    "date",
+    "string",
+    "number",
+    "currency",
+    "slug",
+    "status",
+    "typescript"
+  ],
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./date": {
+      "types": "./dist/date/index.d.ts",
+      "import": "./dist/date/index.mjs",
+      "require": "./dist/date/index.js"
+    },
+    "./string": {
+      "types": "./dist/string/index.d.ts",
+      "import": "./dist/string/index.mjs",
+      "require": "./dist/string/index.js"
+    },
+    "./number": {
+      "types": "./dist/number/index.d.ts",
+      "import": "./dist/number/index.mjs",
+      "require": "./dist/number/index.js"
+    },
+    "./status": {
+      "types": "./dist/status/index.d.ts",
+      "import": "./dist/status/index.mjs",
+      "require": "./dist/status/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "dev": "tsup --watch",
+    "build": "tsup",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "lint": "eslint src --ext .ts",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.12",
+    "@types/node": "^20.19.25",
+    "@typescript-eslint/eslint-plugin": "^7.0.1",
+    "@typescript-eslint/parser": "^7.0.1",
+    "eslint": "^8.56.0",
+    "jest": "^29.7.0",
+    "prettier": "^3.2.5",
+    "ts-jest": "^29.1.2",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3"
+  }
+}

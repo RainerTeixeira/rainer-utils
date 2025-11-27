@@ -1,0 +1,29 @@
+# Source
+src/
+tests/
+
+# Config
+tsconfig.json
+tsup.config.ts
+.eslintrc.js
+.prettierrc
+jest.config.js
+
+# Git
+.git/
+.gitignore
+
+# IDE
+.vscode/
+.idea/
+
+# CI/CD
+.github/
+
+# Docs
+docs/
+
+# Tests
+coverage/
+*.test.ts
+*.spec.ts
