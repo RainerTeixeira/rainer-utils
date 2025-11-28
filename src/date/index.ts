@@ -114,20 +114,47 @@ export function formatDateTime(date: string | Date, locale: Locale = DEFAULT_LOC
  */
 export function formatRelativeDate(date: string | Date, locale: Locale = DEFAULT_LOCALE): string {
   const d = typeof date === 'string' ? new Date(date) : date;
+
+  // Proteger contra datas inválidas (evita 'há NaN anos')
+  if (!(d instanceof Date) || Number.isNaN(d.getTime())) {
+    return '';
+  }
   const now = new Date();
   const diffMs = now.getTime() - d.getTime();
   const diffSec = Math.floor(diffMs / 1000);
   const diffMin = Math.floor(diffSec / 60);
   const diffHour = Math.floor(diffMin / 60);
   const diffDay = Math.floor(diffHour / 24);
-  const diffMonth = Math.floor(diffDay / 30);
+  // Usar média de dias por mês mais próxima da realidade para não arredondar cedo demais para 1 ano
+  const diffMonth = Math.floor(diffDay / 30.4375); // 365 / 12
   const diffYear = Math.floor(diffDay / 365);
 
   const texts = RELATIVE_TEXTS[locale];
 
+  // Regras especiais por idioma (mais naturais)
+  if (diffSec < 10) {
+    if (locale === 'pt-BR') return 'agora mesmo';
+    if (locale === 'en-US') return 'just now';
+    if (locale === 'es-ES') return 'ahora mismo';
+  }
+
   if (diffSec < 60) return texts.now;
   if (diffMin < 60) return texts.minute(diffMin);
   if (diffHour < 24) return texts.hour(diffHour);
+
+  // Dias específicos
+  if (diffDay === 1) {
+    if (locale === 'pt-BR') return 'ontem';
+    if (locale === 'en-US') return 'yesterday';
+    if (locale === 'es-ES') return 'ayer';
+  }
+
+  if (diffDay === 2) {
+    if (locale === 'pt-BR') return 'anteontem';
+    if (locale === 'en-US') return 'the day before yesterday';
+    if (locale === 'es-ES') return 'anteayer';
+  }
+
   if (diffDay < 30) return texts.day(diffDay);
   if (diffMonth < 12) return texts.month(diffMonth);
   return texts.year(diffYear);
