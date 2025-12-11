@@ -90,6 +90,52 @@ declare function findMinMax<T extends Record<string, any>>(data: T[], field: key
     max: number;
 };
 
+declare function usePasswordStrength(password: string, options?: {
+    minLength?: number;
+    requireUppercase?: boolean;
+    requireLowercase?: boolean;
+    requireNumbers?: boolean;
+    requireSpecialChars?: boolean;
+    customPatterns?: string[];
+    labels?: {
+        veryWeak?: string;
+        weak?: string;
+        fair?: string;
+        good?: string;
+        strong?: string;
+        enterPassword?: string;
+        useMinLength?: string;
+        addUppercase?: string;
+        addLowercase?: string;
+        addNumbers?: string;
+        addSpecialChars?: string;
+        avoidRepeating?: string;
+        avoidCommon?: string;
+    };
+}): {
+    strength: number;
+    level: string;
+    color: string;
+    label: string;
+    isValid: boolean;
+    validations: {
+        hasMinLength: boolean;
+        hasUppercase: boolean;
+        hasLowercase: boolean;
+        hasNumbers: boolean;
+        hasSpecialChars: boolean;
+        noRepeatingChars: boolean;
+        noCommonPatterns: boolean;
+    };
+    suggestions: string[];
+    generateStrongPassword: (length?: number) => string;
+    isVeryWeak: boolean;
+    isWeak: boolean;
+    isFair: boolean;
+    isGood: boolean;
+    isStrong: boolean;
+};
+
 declare function formatDate(date: string | Date, format?: 'short' | 'long' | 'full'): string;
 declare function formatDateTime(date: string | Date): string;
 declare function formatRelativeDate(date: string | Date): string;
@@ -109,4 +155,4 @@ declare namespace ptBr {
   export { ptBr_formatCompact as formatCompact, ptBr_formatCurrency as formatCurrency, ptBr_formatDate as formatDate, ptBr_formatDateTime as formatDateTime, ptBr_formatNumber as formatNumber, ptBr_formatRelativeDate as formatRelativeDate, ptBr_translateStatus as translateStatus };
 }
 
-export { Locale, type ValidationResult, calculateChange, calculateMovingAverage, capitalize, cleanText, copyToClipboard, countWords, downloadFile, extractInitials, findMinMax, formatNumber$1 as formatNumber, formatPercentage, generateAvatarUrl, generateDynamicAvatarUrl, generateMockChartData, generateUniqueId, getAvatarColorFromName, getElementPosition, groupDataByPeriod, isDarkMode, isElementVisible, isEmpty, isMobile, isValidAvatarUrl, normalizeSpaces, onDarkModeChange, onReducedMotionChange, prefersReducedMotion, ptBr as ptBR, scrollToElement, scrollToPosition, scrollToTop, smoothScrollTo, truncateText, validateEmail, validatePassword, validatePhone, validateSlug, validateText, validateUrl, validateUsername };
+export { Locale, type ValidationResult, calculateChange, calculateMovingAverage, capitalize, cleanText, copyToClipboard, countWords, downloadFile, extractInitials, findMinMax, formatNumber$1 as formatNumber, formatPercentage, generateAvatarUrl, generateDynamicAvatarUrl, generateMockChartData, generateUniqueId, getAvatarColorFromName, getElementPosition, groupDataByPeriod, isDarkMode, isElementVisible, isEmpty, isMobile, isValidAvatarUrl, normalizeSpaces, onDarkModeChange, onReducedMotionChange, prefersReducedMotion, ptBr as ptBR, scrollToElement, scrollToPosition, scrollToTop, smoothScrollTo, truncateText, usePasswordStrength, validateEmail, validatePassword, validatePhone, validateSlug, validateText, validateUrl, validateUsername };

@@ -13,6 +13,9 @@
  * 
  * @returns {Object} Objeto com força da senha e validações
  */
+
+import React from 'react';
+
 export function usePasswordStrength(
   password: string, 
   options: {
@@ -253,6 +256,3 @@ export function usePasswordStrength(
     isStrong: level === 'strong'
   };
 }
-
-// Importar React
-import React from 'react';
