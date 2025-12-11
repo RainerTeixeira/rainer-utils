@@ -86,60 +86,6 @@ declare function findMinMax<T extends Record<string, any>>(data: T[], field: key
     max: number;
 };
 
-interface PasswordStrength {
-    strength: number;
-    label: string;
-    color: string;
-}
-declare function usePasswordStrength(password: string, locale?: Locale): PasswordStrength;
-
-interface UseCarouselKeyboardOptions {
-    slideCount: number;
-    initialSlide?: number;
-    loop?: boolean;
-    autoplay?: boolean;
-    autoplayInterval?: number;
-    pauseOnHover?: boolean;
-    pauseOnInteraction?: boolean;
-    respectReducedMotion?: boolean;
-    onSlideChange?: (index: number) => void;
-    onNext?: (index: number) => void;
-    onPrevious?: (index: number) => void;
-    onAutoplayToggle?: (isPlaying: boolean) => void;
-}
-interface CarouselKeyboardReturn {
-    currentSlide: number;
-    goToSlide: (index: number) => void;
-    goToNext: () => void;
-    goToPrevious: () => void;
-    goToFirst: () => void;
-    goToLast: () => void;
-    isPlaying: boolean;
-    toggleAutoplay: () => void;
-    pauseAutoplay: () => void;
-    resumeAutoplay: () => void;
-    canGoNext: boolean;
-    canGoPrevious: boolean;
-}
-declare function useCarouselKeyboard({ slideCount, initialSlide, loop, autoplay, autoplayInterval, pauseOnInteraction, respectReducedMotion, onSlideChange, onNext, onPrevious, onAutoplayToggle, }: UseCarouselKeyboardOptions): CarouselKeyboardReturn;
-
-interface Heading {
-    id: string;
-    text: string;
-    level: number;
-}
-interface UseTableOfContentsOptions {
-    containerRef?: React.RefObject<HTMLElement>;
-    rootMargin?: string;
-    threshold?: number;
-    offset?: number;
-}
-declare function useTableOfContents({ containerRef, rootMargin, threshold, offset, }?: UseTableOfContentsOptions): {
-    headings: Heading[];
-    activeId: string;
-    scrollToHeading: (id: string) => void;
-};
-
 declare function formatDate(date: string | Date, format?: 'short' | 'long' | 'full'): string;
 declare function formatDateTime(date: string | Date): string;
 declare function formatRelativeDate(date: string | Date): string;
@@ -159,4 +105,4 @@ declare namespace ptBr {
   export { ptBr_formatCompact as formatCompact, ptBr_formatCurrency as formatCurrency, ptBr_formatDate as formatDate, ptBr_formatDateTime as formatDateTime, ptBr_formatNumber as formatNumber, ptBr_formatRelativeDate as formatRelativeDate, ptBr_translateStatus as translateStatus };
 }
 
-export { type CarouselKeyboardReturn, type Heading, Locale, type PasswordStrength, type UseCarouselKeyboardOptions, type UseTableOfContentsOptions, type ValidationResult, calculateChange, calculateMovingAverage, capitalize, cleanText, copyToClipboard, countWords, downloadFile, extractInitials, findMinMax, formatNumber$1 as formatNumber, formatPercentage, generateMockChartData, generateUniqueId, getElementPosition, groupDataByPeriod, isDarkMode, isElementVisible, isEmpty, isMobile, normalizeSpaces, onDarkModeChange, onReducedMotionChange, prefersReducedMotion, ptBr as ptBR, scrollToElement, scrollToPosition, scrollToTop, smoothScrollTo, truncateText, useCarouselKeyboard, usePasswordStrength, useTableOfContents, validateEmail, validatePassword, validatePhone, validateSlug, validateText, validateUrl, validateUsername };
+export { Locale, type ValidationResult, calculateChange, calculateMovingAverage, capitalize, cleanText, copyToClipboard, countWords, downloadFile, extractInitials, findMinMax, formatNumber$1 as formatNumber, formatPercentage, generateMockChartData, generateUniqueId, getElementPosition, groupDataByPeriod, isDarkMode, isElementVisible, isEmpty, isMobile, normalizeSpaces, onDarkModeChange, onReducedMotionChange, prefersReducedMotion, ptBr as ptBR, scrollToElement, scrollToPosition, scrollToTop, smoothScrollTo, truncateText, validateEmail, validatePassword, validatePhone, validateSlug, validateText, validateUrl, validateUsername };
