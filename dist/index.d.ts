@@ -6,6 +6,10 @@ export { formatCurrency } from './number/index.js';
 export { GenericStatus, getStatusColor, getStatusVariant, translateStatus } from './status/index.js';
 
 declare function extractInitials(name: string | null | undefined, maxChars?: number): string;
+declare function generateAvatarUrl(name: string, size?: number, backgroundColor?: string, textColor?: string): string;
+declare function isValidAvatarUrl(url: string): boolean;
+declare function getAvatarColorFromName(name: string): string;
+declare function generateDynamicAvatarUrl(name: string, size?: number): string;
 declare function generateUniqueId(text: string, prefix?: string, suffix?: string): string;
 declare function truncateText(text: string, maxLength: number, suffix?: string): string;
 declare function capitalize(text: string, options?: {
@@ -105,4 +109,4 @@ declare namespace ptBr {
   export { ptBr_formatCompact as formatCompact, ptBr_formatCurrency as formatCurrency, ptBr_formatDate as formatDate, ptBr_formatDateTime as formatDateTime, ptBr_formatNumber as formatNumber, ptBr_formatRelativeDate as formatRelativeDate, ptBr_translateStatus as translateStatus };
 }
 
-export { Locale, type ValidationResult, calculateChange, calculateMovingAverage, capitalize, cleanText, copyToClipboard, countWords, downloadFile, extractInitials, findMinMax, formatNumber$1 as formatNumber, formatPercentage, generateMockChartData, generateUniqueId, getElementPosition, groupDataByPeriod, isDarkMode, isElementVisible, isEmpty, isMobile, normalizeSpaces, onDarkModeChange, onReducedMotionChange, prefersReducedMotion, ptBr as ptBR, scrollToElement, scrollToPosition, scrollToTop, smoothScrollTo, truncateText, validateEmail, validatePassword, validatePhone, validateSlug, validateText, validateUrl, validateUsername };
+export { Locale, type ValidationResult, calculateChange, calculateMovingAverage, capitalize, cleanText, copyToClipboard, countWords, downloadFile, extractInitials, findMinMax, formatNumber$1 as formatNumber, formatPercentage, generateAvatarUrl, generateDynamicAvatarUrl, generateMockChartData, generateUniqueId, getAvatarColorFromName, getElementPosition, groupDataByPeriod, isDarkMode, isElementVisible, isEmpty, isMobile, isValidAvatarUrl, normalizeSpaces, onDarkModeChange, onReducedMotionChange, prefersReducedMotion, ptBr as ptBR, scrollToElement, scrollToPosition, scrollToTop, smoothScrollTo, truncateText, validateEmail, validatePassword, validatePhone, validateSlug, validateText, validateUrl, validateUsername };

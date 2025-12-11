@@ -58,7 +58,7 @@ export * from './stats';
 // ============================================================================
 // HOOKS
 // ============================================================================
-// Removed - React hooks should be in @rainersoft/ui package
+export * from './hooks/use-password-strength';
 
 // ============================================================================
 // PT-BR HELPERS (Pré-configurado para português)
