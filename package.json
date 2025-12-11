@@ -57,6 +57,7 @@
     "LICENSE"
   ],
   "scripts": {
+    "prepare": "pnpm run build",
     "dev": "tsup --watch",
     "build": "tsup",
     "test": "jest",
