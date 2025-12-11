@@ -8,6 +8,10 @@
  * @version 1.0.0
  */
 
+// ============================================================================
+// AVATAR UTILITIES
+// ============================================================================
+
 /**
  * Extrai iniciais de um nome
  *
@@ -36,6 +40,119 @@ export function extractInitials(name: string | null | undefined, maxChars = 2): 
 
   return initials;
 }
+
+/**
+ * Gera URL do avatar com base no nome
+ *
+ * @param name - Nome para gerar avatar
+ * @param size - Tamanho do avatar (default: 200)
+ * @param backgroundColor - Cor de fundo (default: cyan)
+ * @param textColor - Cor do texto (default: white)
+ * @returns URL do avatar
+ *
+ * @example
+ * ```ts
+ * generateAvatarUrl('John Doe') // URL do avatar
+ * generateAvatarUrl('John Doe', 100, 'f97316', 'fff') // URL com cor laranja
+ * ```
+ */
+export function generateAvatarUrl(
+  name: string,
+  size: number = 200,
+  backgroundColor: string = '0891b2',
+  textColor: string = 'fff'
+): string {
+  const encodedName = encodeURIComponent(name);
+  
+  return `https://ui-avatars.com/api/?name=${encodedName}&size=${size}&background=${backgroundColor}&color=${textColor}&font-size=0.5`;
+}
+
+/**
+ * Valida se uma URL de avatar é válida
+ *
+ * @param url - URL do avatar
+ * @returns true se a URL for válida
+ *
+ * @example
+ * ```ts
+ * isValidAvatarUrl('https://example.com/avatar.jpg') // true
+ * isValidAvatarUrl('invalid-url') // false
+ * ```
+ */
+export function isValidAvatarUrl(url: string): boolean {
+  if (!url || typeof url !== 'string') {
+    return false;
+  }
+
+  try {
+    new URL(url);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Obtém a cor do avatar baseada no hash do nome
+ *
+ * @param name - Nome para gerar cor
+ * @returns Cor em formato hexadecimal
+ *
+ * @example
+ * ```ts
+ * getAvatarColorFromName('John Doe') // '#0891b2' (ou outra cor)
+ * getAvatarColorFromName('') // '#0891b2' (cor padrão)
+ * ```
+ */
+export function getAvatarColorFromName(name: string): string {
+  if (!name || typeof name !== 'string') {
+    return '#0891b2'; // cyan-600 como padrão
+  }
+
+  // Gera hash simples do nome
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) {
+    hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  }
+
+  // Cores baseadas em design tokens (compatível com @rainersoft/design-tokens)
+  const colors = [
+    '#0891b2', // cyan-600
+    '#9333ea', // purple-600
+    '#db2777', // pink-600
+    '#059669', // emerald-600
+    '#2563eb', // blue-600
+    '#f97316', // orange-500
+    '#dc2626', // red-600
+    '#7c3aed', // violet-600
+  ];
+
+  const index = Math.abs(hash) % colors.length;
+  return colors[index];
+}
+
+/**
+ * Gera avatar com cor baseada no nome
+ *
+ * @param name - Nome para gerar avatar
+ * @param size - Tamanho do avatar
+ * @returns URL do avatar com cor automática
+ *
+ * @example
+ * ```ts
+ * generateDynamicAvatarUrl('John Doe') // URL com cor baseada no nome
+ * generateDynamicAvatarUrl('Jane Smith', 150) // URL com tamanho 150
+ * ```
+ */
+export function generateDynamicAvatarUrl(name: string, size: number = 200): string {
+  const color = getAvatarColorFromName(name);
+  const colorHex = color.replace('#', '');
+  return generateAvatarUrl(name, size, colorHex, 'fff');
+}
+
+// ============================================================================
+// TEXT UTILITIES
+// ============================================================================
 
 /**
  * Gera ID único baseado em texto

@@ -21,6 +21,55 @@ function extractInitials(name, maxChars = 2) {
   const initials = words.slice(0, maxChars).map((word) => word.charAt(0).toUpperCase()).join("");
   return initials;
 }
+function generateAvatarUrl(name, size = 200, backgroundColor = "0891b2", textColor = "fff") {
+  const encodedName = encodeURIComponent(name);
+  return `https://ui-avatars.com/api/?name=${encodedName}&size=${size}&background=${backgroundColor}&color=${textColor}&font-size=0.5`;
+}
+function isValidAvatarUrl(url) {
+  if (!url || typeof url !== "string") {
+    return false;
+  }
+  try {
+    new URL(url);
+    return true;
+  } catch {
+    return false;
+  }
+}
+function getAvatarColorFromName(name) {
+  if (!name || typeof name !== "string") {
+    return "#0891b2";
+  }
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) {
+    hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const colors = [
+    "#0891b2",
+    // cyan-600
+    "#9333ea",
+    // purple-600
+    "#db2777",
+    // pink-600
+    "#059669",
+    // emerald-600
+    "#2563eb",
+    // blue-600
+    "#f97316",
+    // orange-500
+    "#dc2626",
+    // red-600
+    "#7c3aed"
+    // violet-600
+  ];
+  const index = Math.abs(hash) % colors.length;
+  return colors[index];
+}
+function generateDynamicAvatarUrl(name, size = 200) {
+  const color = getAvatarColorFromName(name);
+  const colorHex = color.replace("#", "");
+  return generateAvatarUrl(name, size, colorHex, "fff");
+}
 function generateUniqueId(text, prefix = "", suffix = "") {
   const slug = text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^\w\s-]/g, "").replace(/\s+/g, "-").replace(/-+/g, "-").trim().substring(0, 50);
   const parts = [prefix, slug, suffix].filter(Boolean);
@@ -792,6 +841,6 @@ function translateStatus2(status) {
   return translateStatus(status, "pt-BR");
 }
 
-export { CURRENCY_MAP, DEFAULT_LOCALE, calculateChange, calculateMovingAverage, capitalize, cleanText, copyToClipboard, countWords, downloadFile, extractInitials, findMinMax, formatCurrency, formatDate, formatDateTime, formatNumber2 as formatNumber, formatPercentage, formatRelativeDate, generateMockChartData, generateUniqueId, getElementPosition, getStatusColor, getStatusVariant, groupDataByPeriod, isDarkMode, isElementVisible, isEmpty, isMobile, isValidDate, normalizeSpaces, onDarkModeChange, onReducedMotionChange, prefersReducedMotion, pt_br_exports as ptBR, scrollToElement, scrollToPosition, scrollToTop, smoothScrollTo, textToSlug, toISOString, translateStatus, truncateText, validateEmail, validatePassword, validatePhone, validateSlug, validateText, validateUrl, validateUsername };
+export { CURRENCY_MAP, DEFAULT_LOCALE, calculateChange, calculateMovingAverage, capitalize, cleanText, copyToClipboard, countWords, downloadFile, extractInitials, findMinMax, formatCurrency, formatDate, formatDateTime, formatNumber2 as formatNumber, formatPercentage, formatRelativeDate, generateAvatarUrl, generateDynamicAvatarUrl, generateMockChartData, generateUniqueId, getAvatarColorFromName, getElementPosition, getStatusColor, getStatusVariant, groupDataByPeriod, isDarkMode, isElementVisible, isEmpty, isMobile, isValidAvatarUrl, isValidDate, normalizeSpaces, onDarkModeChange, onReducedMotionChange, prefersReducedMotion, pt_br_exports as ptBR, scrollToElement, scrollToPosition, scrollToTop, smoothScrollTo, textToSlug, toISOString, translateStatus, truncateText, validateEmail, validatePassword, validatePhone, validateSlug, validateText, validateUrl, validateUsername };
 //# sourceMappingURL=index.mjs.map
 //# sourceMappingURL=index.mjs.map
