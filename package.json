@@ -1,6 +1,6 @@
 {
   "name": "@rainersoft/utils",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Utilitários universais para formatação, conversão e manipulação de dados - Web, Desktop e Mobile",
   "packageManager": "pnpm@9.0.0",
   "author": {
