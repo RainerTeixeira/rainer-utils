@@ -7,7 +7,7 @@
  *
  * @module @rainersoft/utils
  * @author Rainer Teixeira
- * @version 1.0.0
+ * @version 1.3.0
  */
 
 // ============================================================================
@@ -16,7 +16,7 @@
 export * from './types';
 
 // ============================================================================
-// TEXT UTILITIES
+// TEXT PROCESSING (Nome descritivo)
 // ============================================================================
 export * from './text';
 
@@ -26,7 +26,7 @@ export * from './text';
 export { textToSlug } from './string';
 
 // ============================================================================
-// DATE UTILITIES
+// DATETIME (Nome descritivo)
 // ============================================================================
 export * from './date';
 
@@ -36,7 +36,7 @@ export * from './date';
 export { formatCurrency } from './number';
 
 // ============================================================================
-// STATUS UTILITIES
+// STATE MANAGEMENT (Nome descritivo)
 // ============================================================================
 export * from './status';
 
@@ -56,6 +56,16 @@ export * from './dom';
 export * from './stats';
 
 // ============================================================================
+// AUTHENTICATION (Nome descritivo)
+// ============================================================================
+export * from './auth';
+
+// ============================================================================
+// SEARCH UTILITIES
+// ============================================================================
+export * from './search';
+
+// ============================================================================
 // HOOKS
 // ============================================================================
 export * from './hooks/use-password-strength';
@@ -64,3 +74,16 @@ export * from './hooks/use-password-strength';
 // PT-BR HELPERS (Pré-configurado para português)
 // ============================================================================
 export * as ptBR from './pt-br';
+
+// ============================================================================
+// MÓDULOS COM NOMES DESCRITIVOS (Novos aliases profissionais)
+// ============================================================================
+import * as textModule from './text';
+import * as dateModule from './date';
+import * as authModule from './auth';
+import * as statusModule from './status';
+
+export const textProcessing = textModule;
+export const datetime = dateModule;
+export const authentication = authModule;
+export const stateManagement = statusModule;

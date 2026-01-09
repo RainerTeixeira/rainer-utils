@@ -1,9 +1,14 @@
 import { L as Locale } from './types-tUMATEGI.js';
 export { C as CURRENCY_MAP, D as DEFAULT_LOCALE, a as LocaleConfig } from './types-tUMATEGI.js';
 export { textToSlug } from './string/index.js';
-export { formatDate, formatDateTime, formatRelativeDate, isValidDate, toISOString } from './date/index.js';
+import { d as dateModule } from './index-BA11MtKk.js';
+export { f as formatDate, a as formatDateTime, b as formatRelativeDate, i as isValidDate, t as toISOString } from './index-BA11MtKk.js';
 export { formatCurrency } from './number/index.js';
-export { GenericStatus, getStatusColor, getStatusVariant, translateStatus } from './status/index.js';
+import { s as statusModule } from './index-BfZE8XjJ.js';
+export { G as GenericStatus, g as getStatusColor, a as getStatusVariant, b as translatePostStatus, t as translateStatus } from './index-BfZE8XjJ.js';
+import { a as authModule } from './index-DeZ9ZulO.js';
+export { b as getRefreshToken, g as getToken, d as getTokens, h as hasToken, r as removeToken, c as setRefreshToken, s as setToken, e as setTokens } from './index-DeZ9ZulO.js';
+export { SearchOptions, fuzzySearch, searchContent, searchWithScore } from './search/index.js';
 
 declare function extractInitials(name: string | null | undefined, maxChars?: number): string;
 declare function generateAvatarUrl(name: string, size?: number, backgroundColor?: string, textColor?: string): string;
@@ -22,6 +27,24 @@ declare function isEmpty(text: string | null | undefined): boolean;
 declare function normalizeSpaces(text: string, options?: {
     newlines?: boolean;
 }): string;
+declare function calculateReadingTime(content: string | Record<string, any>, wordsPerMinute?: number): number;
+
+declare const textModule_calculateReadingTime: typeof calculateReadingTime;
+declare const textModule_capitalize: typeof capitalize;
+declare const textModule_cleanText: typeof cleanText;
+declare const textModule_countWords: typeof countWords;
+declare const textModule_extractInitials: typeof extractInitials;
+declare const textModule_generateAvatarUrl: typeof generateAvatarUrl;
+declare const textModule_generateDynamicAvatarUrl: typeof generateDynamicAvatarUrl;
+declare const textModule_generateUniqueId: typeof generateUniqueId;
+declare const textModule_getAvatarColorFromName: typeof getAvatarColorFromName;
+declare const textModule_isEmpty: typeof isEmpty;
+declare const textModule_isValidAvatarUrl: typeof isValidAvatarUrl;
+declare const textModule_normalizeSpaces: typeof normalizeSpaces;
+declare const textModule_truncateText: typeof truncateText;
+declare namespace textModule {
+  export { textModule_calculateReadingTime as calculateReadingTime, textModule_capitalize as capitalize, textModule_cleanText as cleanText, textModule_countWords as countWords, textModule_extractInitials as extractInitials, textModule_generateAvatarUrl as generateAvatarUrl, textModule_generateDynamicAvatarUrl as generateDynamicAvatarUrl, textModule_generateUniqueId as generateUniqueId, textModule_getAvatarColorFromName as getAvatarColorFromName, textModule_isEmpty as isEmpty, textModule_isValidAvatarUrl as isValidAvatarUrl, textModule_normalizeSpaces as normalizeSpaces, textModule_truncateText as truncateText };
+}
 
 interface ValidationResult {
     isValid: boolean;
@@ -50,6 +73,10 @@ declare function validateText(text: string, options?: {
     minLength?: number;
     maxLength?: number;
     fieldName?: string;
+}, locale?: Locale): ValidationResult;
+declare function validateMessage(message: string, options?: {
+    minLength?: number;
+    maxLength?: number;
 }, locale?: Locale): ValidationResult;
 
 declare function prefersReducedMotion(): boolean;
@@ -155,4 +182,9 @@ declare namespace ptBr {
   export { ptBr_formatCompact as formatCompact, ptBr_formatCurrency as formatCurrency, ptBr_formatDate as formatDate, ptBr_formatDateTime as formatDateTime, ptBr_formatNumber as formatNumber, ptBr_formatRelativeDate as formatRelativeDate, ptBr_translateStatus as translateStatus };
 }
 
-export { Locale, type ValidationResult, calculateChange, calculateMovingAverage, capitalize, cleanText, copyToClipboard, countWords, downloadFile, extractInitials, findMinMax, formatNumber$1 as formatNumber, formatPercentage, generateAvatarUrl, generateDynamicAvatarUrl, generateMockChartData, generateUniqueId, getAvatarColorFromName, getElementPosition, groupDataByPeriod, isDarkMode, isElementVisible, isEmpty, isMobile, isValidAvatarUrl, normalizeSpaces, onDarkModeChange, onReducedMotionChange, prefersReducedMotion, ptBr as ptBR, scrollToElement, scrollToPosition, scrollToTop, smoothScrollTo, truncateText, usePasswordStrength, validateEmail, validatePassword, validatePhone, validateSlug, validateText, validateUrl, validateUsername };
+declare const textProcessing: typeof textModule;
+declare const datetime: typeof dateModule;
+declare const authentication: typeof authModule;
+declare const stateManagement: typeof statusModule;
+
+export { Locale, type ValidationResult, authentication, calculateChange, calculateMovingAverage, calculateReadingTime, capitalize, cleanText, copyToClipboard, countWords, datetime, downloadFile, extractInitials, findMinMax, formatNumber$1 as formatNumber, formatPercentage, generateAvatarUrl, generateDynamicAvatarUrl, generateMockChartData, generateUniqueId, getAvatarColorFromName, getElementPosition, groupDataByPeriod, isDarkMode, isElementVisible, isEmpty, isMobile, isValidAvatarUrl, normalizeSpaces, onDarkModeChange, onReducedMotionChange, prefersReducedMotion, ptBr as ptBR, scrollToElement, scrollToPosition, scrollToTop, smoothScrollTo, stateManagement, textProcessing, truncateText, usePasswordStrength, validateEmail, validateMessage, validatePassword, validatePhone, validateSlug, validateText, validateUrl, validateUsername };

@@ -116,7 +116,26 @@ function getStatusVariant(status) {
   }
   return "outline";
 }
+function translatePostStatus(status, locale = DEFAULT_LOCALE) {
+  const postStatusMap = {
+    "draft": "DRAFT",
+    "published": "PUBLISHED",
+    "archived": "ARCHIVED",
+    "scheduled": "SCHEDULED",
+    "pending_review": "PENDING"
+  };
+  const normalized = postStatusMap[status.toLowerCase()] || status.toUpperCase();
+  if (status.toLowerCase() === "pending_review") {
+    const translations = {
+      "pt-BR": "Aguardando Revis\xE3o",
+      "en-US": "Pending Review",
+      "es-ES": "Pendiente de Revisi\xF3n"
+    };
+    return translations[locale] || translations["pt-BR"];
+  }
+  return translateStatus(normalized, locale);
+}
 
-export { getStatusColor, getStatusVariant, translateStatus };
+export { getStatusColor, getStatusVariant, translatePostStatus, translateStatus };
 //# sourceMappingURL=index.mjs.map
 //# sourceMappingURL=index.mjs.map

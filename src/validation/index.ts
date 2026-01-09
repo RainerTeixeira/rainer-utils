@@ -392,3 +392,35 @@ export function validateText(
     errors
   };
 }
+
+/**
+ * Valida mensagem de contato
+ *
+ * @param message - Mensagem para validar
+ * @param options - Opções de validação
+ * @param locale - Idioma das mensagens de erro
+ * @returns Resultado da validação
+ *
+ * @example
+ * validateMessage('Olá, gostaria de mais informações') // { isValid: true }
+ * validateMessage('Oi') // { isValid: false, errors: ['Mensagem muito curta'] }
+ */
+export function validateMessage(
+  message: string,
+  options: {
+    minLength?: number;
+    maxLength?: number;
+  } = {},
+  locale: Locale = DEFAULT_LOCALE
+): ValidationResult {
+  const {
+    minLength = 10,
+    maxLength = 1000
+  } = options;
+  
+  return validateText(message, {
+    minLength,
+    maxLength,
+    fieldName: locale === 'pt-BR' ? 'Mensagem' : locale === 'en-US' ? 'Message' : 'Mensaje'
+  }, locale);
+}

@@ -15,6 +15,22 @@ var CURRENCY_MAP = {
 };
 
 // src/text/index.ts
+var text_exports = {};
+__export(text_exports, {
+  calculateReadingTime: () => calculateReadingTime,
+  capitalize: () => capitalize,
+  cleanText: () => cleanText,
+  countWords: () => countWords,
+  extractInitials: () => extractInitials,
+  generateAvatarUrl: () => generateAvatarUrl,
+  generateDynamicAvatarUrl: () => generateDynamicAvatarUrl,
+  generateUniqueId: () => generateUniqueId,
+  getAvatarColorFromName: () => getAvatarColorFromName,
+  isEmpty: () => isEmpty,
+  isValidAvatarUrl: () => isValidAvatarUrl,
+  normalizeSpaces: () => normalizeSpaces,
+  truncateText: () => truncateText
+});
 function extractInitials(name, maxChars = 2) {
   if (!name || !name.trim()) {
     return "";
@@ -119,6 +135,28 @@ function normalizeSpaces(text, options = {}) {
   }
   return cleaned.trim();
 }
+function calculateReadingTime(content, wordsPerMinute = 200) {
+  let text = "";
+  if (typeof content === "object" && content !== null) {
+    const extractText = (node) => {
+      if (!node) return "";
+      let result = "";
+      if (node.text) {
+        result += node.text + " ";
+      }
+      if (Array.isArray(node.content)) {
+        result += node.content.map(extractText).join(" ");
+      }
+      return result;
+    };
+    text = extractText(content);
+  } else if (typeof content === "string") {
+    text = content.replace(/<[^>]*>/g, "");
+  }
+  const words = text.trim().split(/\s+/).filter((word) => word.length > 0).length;
+  const time = Math.ceil(words / wordsPerMinute);
+  return time > 0 ? time : 1;
+}
 
 // src/string/index.ts
 function textToSlug(text) {
@@ -126,6 +164,14 @@ function textToSlug(text) {
 }
 
 // src/date/index.ts
+var date_exports = {};
+__export(date_exports, {
+  formatDate: () => formatDate,
+  formatDateTime: () => formatDateTime,
+  formatRelativeDate: () => formatRelativeDate,
+  isValidDate: () => isValidDate,
+  toISOString: () => toISOString
+});
 var RELATIVE_TEXTS = {
   "pt-BR": {
     now: "agora",
@@ -243,6 +289,13 @@ function formatCompact(value, decimals = 1, locale = DEFAULT_LOCALE) {
 }
 
 // src/status/index.ts
+var status_exports = {};
+__export(status_exports, {
+  getStatusColor: () => getStatusColor,
+  getStatusVariant: () => getStatusVariant,
+  translatePostStatus: () => translatePostStatus,
+  translateStatus: () => translateStatus
+});
 var STATUS_TRANSLATIONS = {
   "pt-BR": {
     // Estados de conteúdo
@@ -356,6 +409,25 @@ function getStatusVariant(status) {
     return "secondary";
   }
   return "outline";
+}
+function translatePostStatus(status, locale = DEFAULT_LOCALE) {
+  const postStatusMap = {
+    "draft": "DRAFT",
+    "published": "PUBLISHED",
+    "archived": "ARCHIVED",
+    "scheduled": "SCHEDULED",
+    "pending_review": "PENDING"
+  };
+  const normalized = postStatusMap[status.toLowerCase()] || status.toUpperCase();
+  if (status.toLowerCase() === "pending_review") {
+    const translations = {
+      "pt-BR": "Aguardando Revis\xE3o",
+      "en-US": "Pending Review",
+      "es-ES": "Pendiente de Revisi\xF3n"
+    };
+    return translations[locale] || translations["pt-BR"];
+  }
+  return translateStatus(normalized, locale);
 }
 
 // src/validation/index.ts
@@ -571,6 +643,17 @@ function validateText(text, options = {}, locale = DEFAULT_LOCALE) {
     isValid: errors.length === 0,
     errors
   };
+}
+function validateMessage(message, options = {}, locale = DEFAULT_LOCALE) {
+  const {
+    minLength = 10,
+    maxLength = 1e3
+  } = options;
+  return validateText(message, {
+    minLength,
+    maxLength,
+    fieldName: locale === "pt-BR" ? "Mensagem" : locale === "en-US" ? "Message" : "Mensaje"
+  }, locale);
 }
 
 // src/dom/index.ts
@@ -809,6 +892,153 @@ function findMinMax(data, field) {
     max: Math.max(...values)
   };
 }
+
+// src/auth/index.ts
+var auth_exports = {};
+__export(auth_exports, {
+  getRefreshToken: () => getRefreshToken,
+  getToken: () => getToken,
+  getTokens: () => getTokens,
+  hasToken: () => hasToken,
+  removeToken: () => removeToken,
+  setRefreshToken: () => setRefreshToken,
+  setToken: () => setToken,
+  setTokens: () => setTokens
+});
+var TOKEN_KEY = "auth_token";
+var REFRESH_TOKEN_KEY = "refresh_token";
+var getToken = () => {
+  if (typeof window === "undefined") {
+    return null;
+  }
+  return localStorage.getItem(TOKEN_KEY);
+};
+var setToken = (token) => {
+  if (typeof window === "undefined") {
+    return;
+  }
+  localStorage.setItem(TOKEN_KEY, token);
+};
+var getRefreshToken = () => {
+  if (typeof window === "undefined") {
+    return null;
+  }
+  return localStorage.getItem(REFRESH_TOKEN_KEY);
+};
+var setRefreshToken = (refreshToken) => {
+  if (typeof window === "undefined") {
+    return;
+  }
+  localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
+};
+var removeToken = () => {
+  if (typeof window === "undefined") {
+    return;
+  }
+  localStorage.removeItem(TOKEN_KEY);
+  localStorage.removeItem(REFRESH_TOKEN_KEY);
+};
+var hasToken = () => {
+  return !!getToken();
+};
+var getTokens = () => {
+  return {
+    accessToken: getToken(),
+    refreshToken: getRefreshToken()
+  };
+};
+var setTokens = ({
+  accessToken,
+  refreshToken
+}) => {
+  setToken(accessToken);
+  setRefreshToken(refreshToken);
+};
+
+// src/search/index.ts
+function searchContent(query, content, options = {}) {
+  if (!query.trim()) return content;
+  const {
+    fields = ["title", "description", "content", "tags"],
+    caseSensitive = false,
+    exactMatch = false
+  } = options;
+  const searchQuery = caseSensitive ? query : query.toLowerCase();
+  return content.filter((item) => {
+    return fields.some((field) => {
+      const value = item[field];
+      if (!value) return false;
+      if (Array.isArray(value)) {
+        return value.some((v) => {
+          const strValue2 = caseSensitive ? String(v) : String(v).toLowerCase();
+          return exactMatch ? strValue2 === searchQuery : strValue2.includes(searchQuery);
+        });
+      }
+      const strValue = caseSensitive ? String(value) : String(value).toLowerCase();
+      return exactMatch ? strValue === searchQuery : strValue.includes(searchQuery);
+    });
+  });
+}
+function searchWithScore(query, content, options = {}) {
+  if (!query.trim()) return content;
+  const {
+    fields = ["title", "description", "content", "tags"],
+    caseSensitive = false
+  } = options;
+  const searchQuery = caseSensitive ? query : query.toLowerCase();
+  const scored = content.map((item) => {
+    let score = 0;
+    fields.forEach((field, index) => {
+      const value = item[field];
+      if (!value) return;
+      const weight = fields.length - index;
+      if (Array.isArray(value)) {
+        const matches = value.filter((v) => {
+          const strValue = caseSensitive ? String(v) : String(v).toLowerCase();
+          return strValue.includes(searchQuery);
+        }).length;
+        score += matches * weight;
+      } else {
+        const strValue = caseSensitive ? String(value) : String(value).toLowerCase();
+        if (strValue.includes(searchQuery)) {
+          score += weight;
+          if (strValue === searchQuery) {
+            score += weight * 2;
+          }
+        }
+      }
+    });
+    return { item, score };
+  });
+  return scored.filter(({ score }) => score > 0).sort((a, b) => b.score - a.score).map(({ item }) => item);
+}
+function fuzzySearch(query, content, options = {}) {
+  if (!query.trim()) return content;
+  const {
+    fields = ["title", "description"],
+    caseSensitive = false,
+    threshold = 0.6
+    // Similaridade mínima (0-1)
+  } = options;
+  const searchQuery = caseSensitive ? query : query.toLowerCase();
+  return content.filter((item) => {
+    return fields.some((field) => {
+      const value = item[field];
+      if (!value) return false;
+      const strValue = caseSensitive ? String(value) : String(value).toLowerCase();
+      const similarity = calculateSimilarity(searchQuery, strValue);
+      return similarity >= threshold;
+    });
+  });
+}
+function calculateSimilarity(str1, str2) {
+  if (str1 === str2) return 1;
+  if (str1.length === 0 || str2.length === 0) return 0;
+  if (str2.includes(str1)) return 0.8;
+  const common = str1.split("").filter((char) => str2.includes(char)).length;
+  const similarity = common / Math.max(str1.length, str2.length);
+  return similarity;
+}
 function usePasswordStrength(password, options = {}) {
   const {
     minLength = 8,
@@ -1029,6 +1259,12 @@ function translateStatus2(status) {
   return translateStatus(status, "pt-BR");
 }
 
-export { CURRENCY_MAP, DEFAULT_LOCALE, calculateChange, calculateMovingAverage, capitalize, cleanText, copyToClipboard, countWords, downloadFile, extractInitials, findMinMax, formatCurrency, formatDate, formatDateTime, formatNumber2 as formatNumber, formatPercentage, formatRelativeDate, generateAvatarUrl, generateDynamicAvatarUrl, generateMockChartData, generateUniqueId, getAvatarColorFromName, getElementPosition, getStatusColor, getStatusVariant, groupDataByPeriod, isDarkMode, isElementVisible, isEmpty, isMobile, isValidAvatarUrl, isValidDate, normalizeSpaces, onDarkModeChange, onReducedMotionChange, prefersReducedMotion, pt_br_exports as ptBR, scrollToElement, scrollToPosition, scrollToTop, smoothScrollTo, textToSlug, toISOString, translateStatus, truncateText, usePasswordStrength, validateEmail, validatePassword, validatePhone, validateSlug, validateText, validateUrl, validateUsername };
+// src/index.ts
+var textProcessing = text_exports;
+var datetime = date_exports;
+var authentication = auth_exports;
+var stateManagement = status_exports;
+
+export { CURRENCY_MAP, DEFAULT_LOCALE, authentication, calculateChange, calculateMovingAverage, calculateReadingTime, capitalize, cleanText, copyToClipboard, countWords, datetime, downloadFile, extractInitials, findMinMax, formatCurrency, formatDate, formatDateTime, formatNumber2 as formatNumber, formatPercentage, formatRelativeDate, fuzzySearch, generateAvatarUrl, generateDynamicAvatarUrl, generateMockChartData, generateUniqueId, getAvatarColorFromName, getElementPosition, getRefreshToken, getStatusColor, getStatusVariant, getToken, getTokens, groupDataByPeriod, hasToken, isDarkMode, isElementVisible, isEmpty, isMobile, isValidAvatarUrl, isValidDate, normalizeSpaces, onDarkModeChange, onReducedMotionChange, prefersReducedMotion, pt_br_exports as ptBR, removeToken, scrollToElement, scrollToPosition, scrollToTop, searchContent, searchWithScore, setRefreshToken, setToken, setTokens, smoothScrollTo, stateManagement, textProcessing, textToSlug, toISOString, translatePostStatus, translateStatus, truncateText, usePasswordStrength, validateEmail, validateMessage, validatePassword, validatePhone, validateSlug, validateText, validateUrl, validateUsername };
 //# sourceMappingURL=index.mjs.map
 //# sourceMappingURL=index.mjs.map

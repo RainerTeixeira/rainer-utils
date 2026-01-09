@@ -191,3 +191,42 @@ export function getStatusVariant(status: string): 'default' | 'secondary' | 'des
   
   return 'outline'; // Padrão
 }
+
+/**
+ * Traduz status de posts do blog (alias para translateStatus)
+ * Mantém compatibilidade com código legado
+ *
+ * @param status - Status do post (draft, published, archived, etc)
+ * @param locale - Idioma (padrão: 'pt-BR')
+ * @returns Status traduzido
+ *
+ * @example
+ * translatePostStatus('draft') // 'Rascunho'
+ * translatePostStatus('published') // 'Publicado'
+ * translatePostStatus('pending_review') // 'Aguardando Revisão'
+ */
+export function translatePostStatus(status: string, locale: Locale = DEFAULT_LOCALE): string {
+  // Mapeamento de status específicos de posts
+  const postStatusMap: Record<string, string> = {
+    'draft': 'DRAFT',
+    'published': 'PUBLISHED',
+    'archived': 'ARCHIVED',
+    'scheduled': 'SCHEDULED',
+    'pending_review': 'PENDING',
+  };
+  
+  // Normaliza o status (lowercase com underscores para uppercase)
+  const normalized = postStatusMap[status.toLowerCase()] || status.toUpperCase();
+  
+  // Traduções específicas para pending_review
+  if (status.toLowerCase() === 'pending_review') {
+    const translations = {
+      'pt-BR': 'Aguardando Revisão',
+      'en-US': 'Pending Review',
+      'es-ES': 'Pendiente de Revisión'
+    };
+    return translations[locale] || translations['pt-BR'];
+  }
+  
+  return translateStatus(normalized, locale);
+}

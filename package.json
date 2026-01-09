@@ -1,6 +1,6 @@
 {
   "name": "@rainersoft/utils",
-  "version": "1.0.4",
+  "version": "1.3.0",
   "description": "Utilitários universais para formatação, conversão e manipulação de dados - Web, Desktop e Mobile",
   "packageManager": "pnpm@9.0.0",
   "author": {
@@ -49,6 +49,16 @@
       "import": "./dist/status/index.mjs",
       "require": "./dist/status/index.js"
     },
+    "./auth": {
+      "types": "./dist/auth/index.d.ts",
+      "import": "./dist/auth/index.mjs",
+      "require": "./dist/auth/index.js"
+    },
+    "./search": {
+      "types": "./dist/search/index.d.ts",
+      "import": "./dist/search/index.mjs",
+      "require": "./dist/search/index.js"
+    },
     "./package.json": "./package.json"
   },
   "files": [
@@ -64,7 +74,12 @@
     "test:coverage": "jest --coverage",
     "lint": "eslint src --ext .ts",
     "format": "prettier --write \"src/**/*.ts\"",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "changelog": "npx tsx scripts/generate-changelog.ts",
+    "version": "npx tsx scripts/generate-changelog.ts && git add docs/98-CHANGELOG.md package.json",
+    "release": "npx tsx scripts/release-package.ts",
+    "release:dry-run": "npx tsx scripts/release-package.ts --dry-run",
+    "release:validate": "npx tsx scripts/release-package.ts --validate-only"
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0"
@@ -82,6 +97,7 @@
     "prettier": "^3.2.5",
     "ts-jest": "^29.1.2",
     "tsup": "^8.5.1",
+    "tsx": "^4.21.0",
     "typescript": "^5.9.3"
   }
 }

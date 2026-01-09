@@ -338,3 +338,71 @@ export function normalizeSpaces(
   
   return cleaned.trim();
 }
+
+/**
+ * Calcula tempo de leitura baseado no conteúdo
+ *
+ * Suporta múltiplos formatos:
+ * - JSON (objeto com conteúdo estruturado)
+ * - HTML (string com tags)
+ * - Texto simples (string)
+ *
+ * @param content - Conteúdo a analisar (objeto JSON, HTML ou texto)
+ * @param wordsPerMinute - Palavras por minuto (padrão: 200)
+ * @returns Tempo de leitura em minutos (mínimo: 1)
+ *
+ * @example
+ * ```ts
+ * // JSON estruturado
+ * const jsonContent = { type: 'doc', content: [...] };
+ * calculateReadingTime(jsonContent) // 5
+ *
+ * // HTML
+ * calculateReadingTime('<p>Texto longo...</p>') // 3
+ *
+ * // Texto simples
+ * calculateReadingTime('Texto simples') // 1
+ * ```
+ */
+export function calculateReadingTime(
+  content: string | Record<string, any>,
+  wordsPerMinute: number = 200
+): number {
+  let text = '';
+
+  // Se for objeto (JSON estruturado)
+  if (typeof content === 'object' && content !== null) {
+    // Extrai texto de estrutura JSON recursivamente
+    const extractText = (node: any): string => {
+      if (!node) return '';
+      
+      let result = '';
+      
+      // Se tem texto direto
+      if (node.text) {
+        result += node.text + ' ';
+      }
+      
+      // Se tem conteúdo (array de nós)
+      if (Array.isArray(node.content)) {
+        result += node.content.map(extractText).join(' ');
+      }
+      
+      return result;
+    };
+    
+    text = extractText(content);
+  } else if (typeof content === 'string') {
+    // Se for HTML ou texto simples, remove tags HTML
+    text = content.replace(/<[^>]*>/g, '');
+  }
+
+  const words = text
+    .trim()
+    .split(/\s+/)
+    .filter(word => word.length > 0).length;
+  const time = Math.ceil(words / wordsPerMinute);
+
+  // Retorna no mínimo 1 minuto
+  return time > 0 ? time : 1;
+}
