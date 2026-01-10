@@ -115,3 +115,135 @@ export function isEmpty(text: string | null | undefined): boolean {
 export function wordCount(text: string): number {
   return text.trim().split(/\s+/).filter(word => word.length > 0).length;
 }
+
+/**
+ * Formata um número de telefone brasileiro
+ * 
+ * @param phone - Número de telefone (com ou sem formatação)
+ * @returns Telefone formatado
+ * 
+ * @example
+ * formatPhone('11999998888') // '(11) 99999-8888'
+ * formatPhone('1133334444') // '(11) 3333-4444'
+ */
+export function formatPhone(phone: string): string {
+  const digits = phone.replace(/\D/g, '');
+  
+  if (digits.length === 11) {
+    return digits.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+  }
+  
+  return digits.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
+}
+
+/**
+ * Formata um CPF
+ * 
+ * @param cpf - Número do CPF (com ou sem formatação)
+ * @returns CPF formatado
+ * 
+ * @example
+ * formatCPF('12345678901') // '123.456.789-01'
+ */
+export function formatCPF(cpf: string): string {
+  const digits = cpf.replace(/\D/g, '');
+  return digits.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+}
+
+/**
+ * Formata um CNPJ
+ * 
+ * @param cnpj - Número do CNPJ (com ou sem formatação)
+ * @returns CNPJ formatado
+ * 
+ * @example
+ * formatCNPJ('12345678000199') // '12.345.678/0001-99'
+ */
+export function formatCNPJ(cnpj: string): string {
+  const digits = cnpj.replace(/\D/g, '');
+  return digits.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5');
+}
+
+/**
+ * Valida um CPF
+ * 
+ * @param cpf - Número do CPF (com ou sem formatação)
+ * @returns true se válido, false caso contrário
+ * 
+ * @example
+ * isCPF('123.456.789-09') // false (CPF inválido)
+ */
+export function isCPF(cpf: string): boolean {
+  const digits = cpf.replace(/\D/g, '');
+  
+  if (digits.length !== 11 || /^(\d)\1{10}$/.test(digits)) {
+    return false;
+  }
+  
+  // Cálculo do primeiro dígito verificador
+  let sum = 0;
+  for (let i = 0; i < 9; i++) {
+    sum += parseInt(digits.charAt(i)) * (10 - i);
+  }
+  let remainder = (sum * 10) % 11;
+  if (remainder === 10 || remainder === 11) remainder = 0;
+  if (remainder !== parseInt(digits.charAt(9))) {
+    return false;
+  }
+  
+  // Cálculo do segundo dígito verificador
+  sum = 0;
+  for (let i = 0; i < 10; i++) {
+    sum += parseInt(digits.charAt(i)) * (11 - i);
+  }
+  remainder = (sum * 10) % 11;
+  if (remainder === 10 || remainder === 11) remainder = 0;
+  if (remainder !== parseInt(digits.charAt(10))) {
+    return false;
+  }
+  
+  return true;
+}
+
+/**
+ * Valida um CNPJ
+ * 
+ * @param cnpj - Número do CNPJ (com ou sem formatação)
+ * @returns true se válido, false caso contrário
+ * 
+ * @example
+ * isCNPJ('12.345.678/0001-99') // false (CNPJ inválido)
+ */
+export function isCNPJ(cnpj: string): boolean {
+  const digits = cnpj.replace(/\D/g, '');
+  
+  if (digits.length !== 14 || /^(\d)\1{13}$/.test(digits)) {
+    return false;
+  }
+  
+  // Cálculo do primeiro dígito verificador
+  const weights1 = [5,4,3,2,9,8,7,6,5,4,3,2];
+  let sum = 0;
+  for (let i = 0; i < 12; i++) {
+    sum += parseInt(digits.charAt(i)) * weights1[i];
+  }
+  let remainder = sum % 11;
+  const digit1 = remainder < 2 ? 0 : 11 - remainder;
+  if (digit1 !== parseInt(digits.charAt(12))) {
+    return false;
+  }
+  
+  // Cálculo do segundo dígito verificador
+  const weights2 = [6,5,4,3,2,9,8,7,6,5,4,3,2];
+  sum = 0;
+  for (let i = 0; i < 13; i++) {
+    sum += parseInt(digits.charAt(i)) * weights2[i];
+  }
+  remainder = sum % 11;
+  const digit2 = remainder < 2 ? 0 : 11 - remainder;
+  if (digit2 !== parseInt(digits.charAt(13))) {
+    return false;
+  }
+  
+  return true;
+}

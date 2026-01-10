@@ -23,7 +23,7 @@ export * from './text';
 // ============================================================================
 // STRING UTILITIES (sem conflitos)
 // ============================================================================
-export { textToSlug } from './string';
+export { textToSlug, formatPhone, formatCPF, formatCNPJ, isCPF, isCNPJ } from './string';
 
 // ============================================================================
 // DATETIME (Nome descritivo)
@@ -58,7 +58,7 @@ export * from './stats';
 // ============================================================================
 // AUTHENTICATION (Nome descritivo)
 // ============================================================================
-export * from './auth';
+export * from './authentication';
 
 // ============================================================================
 // SEARCH UTILITIES
@@ -80,7 +80,7 @@ export * as ptBR from './pt-br';
 // ============================================================================
 import * as textModule from './text';
 import * as dateModule from './date';
-import * as authModule from './auth';
+import * as authModule from './authentication';
 import * as statusModule from './status';
 
 export const textProcessing = textModule;
