@@ -7,7 +7,7 @@ export default defineConfig({
     'string/index': 'src/string/index.ts',
     'number/index': 'src/number/index.ts',
     'status/index': 'src/status/index.ts',
-    'auth/index': 'src/auth/index.ts',
+    'auth/index': 'src/authentication/index.ts',
     'search/index': 'src/search/index.ts',
   },
   format: ['cjs', 'esm'],

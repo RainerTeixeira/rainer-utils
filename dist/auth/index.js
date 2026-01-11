@@ -1,6 +1,6 @@
 'use strict';
 
-// src/auth/index.ts
+// src/authentication/index.ts
 var TOKEN_KEY = "auth_token";
 var REFRESH_TOKEN_KEY = "refresh_token";
 var getToken = () => {

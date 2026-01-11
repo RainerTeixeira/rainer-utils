@@ -168,6 +168,73 @@ function calculateReadingTime(content, wordsPerMinute = 200) {
 function textToSlug(text) {
   return text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^\w\s-]/g, "").trim().replace(/\s+/g, "-").replace(/-+/g, "-");
 }
+function formatPhone(phone) {
+  const digits = phone.replace(/\D/g, "");
+  if (digits.length === 11) {
+    return digits.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
+  }
+  return digits.replace(/(\d{2})(\d{4})(\d{4})/, "($1) $2-$3");
+}
+function formatCPF(cpf) {
+  const digits = cpf.replace(/\D/g, "");
+  return digits.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+}
+function formatCNPJ(cnpj) {
+  const digits = cnpj.replace(/\D/g, "");
+  return digits.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, "$1.$2.$3/$4-$5");
+}
+function isCPF(cpf) {
+  const digits = cpf.replace(/\D/g, "");
+  if (digits.length !== 11 || /^(\d)\1{10}$/.test(digits)) {
+    return false;
+  }
+  let sum = 0;
+  for (let i = 0; i < 9; i++) {
+    sum += parseInt(digits.charAt(i)) * (10 - i);
+  }
+  let remainder = sum * 10 % 11;
+  if (remainder === 10 || remainder === 11) remainder = 0;
+  if (remainder !== parseInt(digits.charAt(9))) {
+    return false;
+  }
+  sum = 0;
+  for (let i = 0; i < 10; i++) {
+    sum += parseInt(digits.charAt(i)) * (11 - i);
+  }
+  remainder = sum * 10 % 11;
+  if (remainder === 10 || remainder === 11) remainder = 0;
+  if (remainder !== parseInt(digits.charAt(10))) {
+    return false;
+  }
+  return true;
+}
+function isCNPJ(cnpj) {
+  const digits = cnpj.replace(/\D/g, "");
+  if (digits.length !== 14 || /^(\d)\1{13}$/.test(digits)) {
+    return false;
+  }
+  const weights1 = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+  let sum = 0;
+  for (let i = 0; i < 12; i++) {
+    sum += parseInt(digits.charAt(i)) * weights1[i];
+  }
+  let remainder = sum % 11;
+  const digit1 = remainder < 2 ? 0 : 11 - remainder;
+  if (digit1 !== parseInt(digits.charAt(12))) {
+    return false;
+  }
+  const weights2 = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+  sum = 0;
+  for (let i = 0; i < 13; i++) {
+    sum += parseInt(digits.charAt(i)) * weights2[i];
+  }
+  remainder = sum % 11;
+  const digit2 = remainder < 2 ? 0 : 11 - remainder;
+  if (digit2 !== parseInt(digits.charAt(13))) {
+    return false;
+  }
+  return true;
+}
 
 // src/date/index.ts
 var date_exports = {};
@@ -899,9 +966,9 @@ function findMinMax(data, field) {
   };
 }
 
-// src/auth/index.ts
-var auth_exports = {};
-__export(auth_exports, {
+// src/authentication/index.ts
+var authentication_exports = {};
+__export(authentication_exports, {
   getRefreshToken: () => getRefreshToken,
   getToken: () => getToken,
   getTokens: () => getTokens,
@@ -1268,7 +1335,7 @@ function translateStatus2(status) {
 // src/index.ts
 var textProcessing = text_exports;
 var datetime = date_exports;
-var authentication = auth_exports;
+var authentication = authentication_exports;
 var stateManagement = status_exports;
 
 exports.CURRENCY_MAP = CURRENCY_MAP;
@@ -1285,11 +1352,14 @@ exports.datetime = datetime;
 exports.downloadFile = downloadFile;
 exports.extractInitials = extractInitials;
 exports.findMinMax = findMinMax;
+exports.formatCNPJ = formatCNPJ;
+exports.formatCPF = formatCPF;
 exports.formatCurrency = formatCurrency;
 exports.formatDate = formatDate;
 exports.formatDateTime = formatDateTime;
 exports.formatNumber = formatNumber2;
 exports.formatPercentage = formatPercentage;
+exports.formatPhone = formatPhone;
 exports.formatRelativeDate = formatRelativeDate;
 exports.fuzzySearch = fuzzySearch;
 exports.generateAvatarUrl = generateAvatarUrl;
@@ -1305,6 +1375,8 @@ exports.getToken = getToken;
 exports.getTokens = getTokens;
 exports.groupDataByPeriod = groupDataByPeriod;
 exports.hasToken = hasToken;
+exports.isCNPJ = isCNPJ;
+exports.isCPF = isCPF;
 exports.isDarkMode = isDarkMode;
 exports.isElementVisible = isElementVisible;
 exports.isEmpty = isEmpty;

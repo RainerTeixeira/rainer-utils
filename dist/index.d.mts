@@ -1,6 +1,6 @@
 import { L as Locale } from './types-tUMATEGI.mjs';
 export { C as CURRENCY_MAP, D as DEFAULT_LOCALE, a as LocaleConfig } from './types-tUMATEGI.mjs';
-export { textToSlug } from './string/index.mjs';
+export { formatCNPJ, formatCPF, formatPhone, isCNPJ, isCPF, textToSlug } from './string/index.mjs';
 import { d as dateModule } from './index-BPYjFrM1.mjs';
 export { f as formatDate, a as formatDateTime, b as formatRelativeDate, i as isValidDate, t as toISOString } from './index-BPYjFrM1.mjs';
 export { formatCurrency } from './number/index.mjs';
