@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useState, useCallback, useEffect } from 'react';
 
 var __defProp = Object.defineProperty;
 var __export = (target, all) => {
@@ -14,220 +14,77 @@ var CURRENCY_MAP = {
   "es-ES": "EUR"
 };
 
-// src/text/index.ts
-var text_exports = {};
-__export(text_exports, {
-  calculateReadingTime: () => calculateReadingTime,
-  capitalize: () => capitalize,
-  cleanText: () => cleanText,
-  countWords: () => countWords,
-  extractInitials: () => extractInitials,
-  generateAvatarUrl: () => generateAvatarUrl,
-  generateDynamicAvatarUrl: () => generateDynamicAvatarUrl,
-  generateUniqueId: () => generateUniqueId,
-  getAvatarColorFromName: () => getAvatarColorFromName,
-  isEmpty: () => isEmpty,
-  isValidAvatarUrl: () => isValidAvatarUrl,
-  normalizeSpaces: () => normalizeSpaces,
-  truncateText: () => truncateText
-});
-function extractInitials(name, maxChars = 2) {
-  if (!name || !name.trim()) {
-    return "";
+// src/accessibility/index.ts
+function hexToRgb(hex) {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  if (!result) {
+    throw new Error(`Invalid hex color: ${hex}`);
   }
-  const words = name.trim().split(/\s+/);
-  const initials = words.slice(0, maxChars).map((word) => word.charAt(0).toUpperCase()).join("");
-  return initials;
+  return {
+    r: parseInt(result[1], 16),
+    g: parseInt(result[2], 16),
+    b: parseInt(result[3], 16)
+  };
 }
-function generateAvatarUrl(name, size = 200, backgroundColor = "0891b2", textColor = "fff") {
-  const encodedName = encodeURIComponent(name);
-  return `https://ui-avatars.com/api/?name=${encodedName}&size=${size}&background=${backgroundColor}&color=${textColor}&font-size=0.5`;
+function getLuminance(r, g, b) {
+  const [rs, gs, bs] = [r, g, b].map((val) => {
+    const v = val / 255;
+    return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+  });
+  return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
 }
-function isValidAvatarUrl(url) {
-  if (!url || typeof url !== "string") {
-    return false;
+function getContrast(color1, color2) {
+  const rgb1 = hexToRgb(color1);
+  const rgb2 = hexToRgb(color2);
+  const lum1 = getLuminance(rgb1.r, rgb1.g, rgb1.b);
+  const lum2 = getLuminance(rgb2.r, rgb2.g, rgb2.b);
+  const lighter = Math.max(lum1, lum2);
+  const darker = Math.min(lum1, lum2);
+  return (lighter + 0.05) / (darker + 0.05);
+}
+function getContrastInfo(foreground, background) {
+  const contrast = getContrast(foreground, background);
+  const meetsAA = contrast >= 4.5;
+  const meetsAALarge = contrast >= 3;
+  const meetsAAA = contrast >= 7;
+  const meetsAAALarge = contrast >= 4.5;
+  let level = "Fail";
+  if (meetsAAA) {
+    level = "AAA";
+  } else if (meetsAAALarge) {
+    level = "AAA Large";
+  } else if (meetsAA) {
+    level = "AA";
+  } else if (meetsAALarge) {
+    level = "AA Large";
   }
-  try {
-    new URL(url);
-    return true;
-  } catch {
-    return false;
-  }
+  return {
+    contrast,
+    meetsAA,
+    meetsAALarge,
+    meetsAAA,
+    meetsAAALarge,
+    level
+  };
 }
-function getAvatarColorFromName(name) {
-  if (!name || typeof name !== "string") {
-    return "#0891b2";
-  }
-  let hash = 0;
-  for (let i = 0; i < name.length; i++) {
-    hash = name.charCodeAt(i) + ((hash << 5) - hash);
-  }
-  const colors = [
-    "#0891b2",
-    // cyan-600
-    "#9333ea",
-    // purple-600
-    "#db2777",
-    // pink-600
-    "#059669",
-    // emerald-600
-    "#2563eb",
-    // blue-600
-    "#f97316",
-    // orange-500
-    "#dc2626",
-    // red-600
-    "#7c3aed"
-    // violet-600
-  ];
-  const index = Math.abs(hash) % colors.length;
-  return colors[index];
-}
-function generateDynamicAvatarUrl(name, size = 200) {
-  const color = getAvatarColorFromName(name);
-  const colorHex = color.replace("#", "");
-  return generateAvatarUrl(name, size, colorHex, "fff");
-}
-function generateUniqueId(text, prefix = "", suffix = "") {
-  const slug = text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^\w\s-]/g, "").replace(/\s+/g, "-").replace(/-+/g, "-").trim().substring(0, 50);
-  const parts = [prefix, slug, suffix].filter(Boolean);
-  return parts.join("-");
-}
-function truncateText(text, maxLength, suffix = "...") {
-  if (!text || text.length <= maxLength) {
-    return text || "";
-  }
-  return text.substring(0, maxLength - suffix.length) + suffix;
-}
-function capitalize(text, options = {}) {
-  if (!text) return "";
-  const { firstWordOnly = false, lowerRest = false } = options;
-  if (firstWordOnly) {
-    return text.charAt(0).toUpperCase() + (lowerRest ? text.slice(1).toLowerCase() : text.slice(1));
-  }
-  if (lowerRest) {
-    return text.replace(/\b\w/g, (char) => char.toUpperCase()).toLowerCase();
-  }
-  return text.replace(/\b\w/g, (char) => char.toUpperCase());
-}
-function cleanText(text, allowSpaces = true) {
-  if (!text) return "";
-  const pattern = allowSpaces ? /[^\w\s]/g : /[^\w]/g;
-  return text.replace(pattern, "");
-}
-function countWords(text) {
-  if (!text || !text.trim()) {
-    return 0;
-  }
-  return text.trim().split(/\s+/).length;
-}
-function isEmpty(text) {
-  return !text || !text.trim();
-}
-function normalizeSpaces(text, options = {}) {
-  if (!text) return "";
-  const { newlines = false } = options;
-  let cleaned = text;
-  if (newlines) {
-    cleaned = cleaned.replace(/\s+/g, " ");
+function validateContrast(foreground, background, options = {}) {
+  const { requireAAA = false, largeText = false } = options;
+  const info = getContrastInfo(foreground, background);
+  let valid = false;
+  let message = "";
+  if (requireAAA) {
+    valid = largeText ? info.meetsAAALarge : info.meetsAAA;
+    message = valid ? `Contraste v\xE1lido (WCAG AAA${largeText ? " - Texto Grande" : ""})` : `Contraste insuficiente para WCAG AAA${largeText ? " - Texto Grande" : ""}. Requerido: ${largeText ? "4.5:1" : "7:1"}, atual: ${info.contrast.toFixed(2)}:1`;
   } else {
-    cleaned = cleaned.replace(/\s+/g, " ");
+    valid = largeText ? info.meetsAALarge : info.meetsAA;
+    message = valid ? `Contraste v\xE1lido (WCAG AA${largeText ? " - Texto Grande" : ""})` : `Contraste insuficiente para WCAG AA${largeText ? " - Texto Grande" : ""}. Requerido: ${largeText ? "3:1" : "4.5:1"}, atual: ${info.contrast.toFixed(2)}:1`;
   }
-  return cleaned.trim();
-}
-function calculateReadingTime(content, wordsPerMinute = 200) {
-  let text = "";
-  if (typeof content === "object" && content !== null) {
-    const extractText = (node) => {
-      if (!node) return "";
-      let result = "";
-      if (node.text) {
-        result += node.text + " ";
-      }
-      if (Array.isArray(node.content)) {
-        result += node.content.map(extractText).join(" ");
-      }
-      return result;
-    };
-    text = extractText(content);
-  } else if (typeof content === "string") {
-    text = content.replace(/<[^>]*>/g, "");
-  }
-  const words = text.trim().split(/\s+/).filter((word) => word.length > 0).length;
-  const time = Math.ceil(words / wordsPerMinute);
-  return time > 0 ? time : 1;
-}
-
-// src/string/index.ts
-function textToSlug(text) {
-  return text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^\w\s-]/g, "").trim().replace(/\s+/g, "-").replace(/-+/g, "-");
-}
-function formatPhone(phone) {
-  const digits = phone.replace(/\D/g, "");
-  if (digits.length === 11) {
-    return digits.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
-  }
-  return digits.replace(/(\d{2})(\d{4})(\d{4})/, "($1) $2-$3");
-}
-function formatCPF(cpf) {
-  const digits = cpf.replace(/\D/g, "");
-  return digits.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
-}
-function formatCNPJ(cnpj) {
-  const digits = cnpj.replace(/\D/g, "");
-  return digits.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, "$1.$2.$3/$4-$5");
-}
-function isCPF(cpf) {
-  const digits = cpf.replace(/\D/g, "");
-  if (digits.length !== 11 || /^(\d)\1{10}$/.test(digits)) {
-    return false;
-  }
-  let sum = 0;
-  for (let i = 0; i < 9; i++) {
-    sum += parseInt(digits.charAt(i)) * (10 - i);
-  }
-  let remainder = sum * 10 % 11;
-  if (remainder === 10 || remainder === 11) remainder = 0;
-  if (remainder !== parseInt(digits.charAt(9))) {
-    return false;
-  }
-  sum = 0;
-  for (let i = 0; i < 10; i++) {
-    sum += parseInt(digits.charAt(i)) * (11 - i);
-  }
-  remainder = sum * 10 % 11;
-  if (remainder === 10 || remainder === 11) remainder = 0;
-  if (remainder !== parseInt(digits.charAt(10))) {
-    return false;
-  }
-  return true;
-}
-function isCNPJ(cnpj) {
-  const digits = cnpj.replace(/\D/g, "");
-  if (digits.length !== 14 || /^(\d)\1{13}$/.test(digits)) {
-    return false;
-  }
-  const weights1 = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
-  let sum = 0;
-  for (let i = 0; i < 12; i++) {
-    sum += parseInt(digits.charAt(i)) * weights1[i];
-  }
-  let remainder = sum % 11;
-  const digit1 = remainder < 2 ? 0 : 11 - remainder;
-  if (digit1 !== parseInt(digits.charAt(12))) {
-    return false;
-  }
-  const weights2 = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
-  sum = 0;
-  for (let i = 0; i < 13; i++) {
-    sum += parseInt(digits.charAt(i)) * weights2[i];
-  }
-  remainder = sum % 11;
-  const digit2 = remainder < 2 ? 0 : 11 - remainder;
-  if (digit2 !== parseInt(digits.charAt(13))) {
-    return false;
-  }
-  return true;
+  return {
+    valid,
+    level: info.level,
+    contrast: info.contrast,
+    message
+  };
 }
 
 // src/date/index.ts
@@ -329,30 +186,6 @@ function toISOString(date) {
 }
 function isValidDate(date) {
   return date instanceof Date && !isNaN(date.getTime());
-}
-
-// src/number/index.ts
-function formatCurrency(value, locale = DEFAULT_LOCALE, options) {
-  const currency = CURRENCY_MAP[locale];
-  return new Intl.NumberFormat(locale, {
-    style: "currency",
-    currency,
-    ...options
-  }).format(value);
-}
-function formatNumber(value, decimals = 0, locale = DEFAULT_LOCALE) {
-  return new Intl.NumberFormat(locale, {
-    minimumFractionDigits: decimals,
-    maximumFractionDigits: decimals
-  }).format(value);
-}
-function formatCompact(value, decimals = 1, locale = DEFAULT_LOCALE) {
-  return new Intl.NumberFormat(locale, {
-    notation: "compact",
-    compactDisplay: "short",
-    minimumFractionDigits: decimals,
-    maximumFractionDigits: decimals
-  }).format(value);
 }
 
 // src/status/index.ts
@@ -723,6 +556,198 @@ function validateMessage(message, options = {}, locale = DEFAULT_LOCALE) {
   }, locale);
 }
 
+// src/content/tiptap-utils.ts
+function extractTextFromTiptap(content) {
+  function extractFromNode(node) {
+    if ("text" in node && typeof node.text === "string") {
+      return node.text;
+    }
+    if ("content" in node && Array.isArray(node.content)) {
+      return node.content.map((child) => extractFromNode(child)).join(" ");
+    }
+    return "";
+  }
+  return extractFromNode(content).trim();
+}
+function generateExcerpt(content, maxLength = 160) {
+  const text = extractTextFromTiptap(content);
+  if (text.length <= maxLength) {
+    return text;
+  }
+  return text.substring(0, maxLength).trim() + "...";
+}
+function createEmptyTiptapContent() {
+  return {
+    type: "doc",
+    content: []
+  };
+}
+function isContentEmpty(content) {
+  if (!content || !content.content || content.content.length === 0) {
+    return true;
+  }
+  const text = extractTextFromTiptap(content);
+  return text.trim().length === 0;
+}
+function countWords(content) {
+  const text = extractTextFromTiptap(content);
+  return text.trim().split(/\s+/).filter((word) => word.length > 0).length;
+}
+function countCharacters(content) {
+  return extractTextFromTiptap(content).length;
+}
+function getReadingTime(content, wordsPerMinute = 200) {
+  const wordCount = countWords(content);
+  return Math.ceil(wordCount / wordsPerMinute);
+}
+function getContentStats(content) {
+  const wordCount = countWords(content);
+  const characterCount = extractTextFromTiptap(content).length;
+  const readingTime = getReadingTime(content);
+  return {
+    wordCount,
+    characterCount,
+    readingTime
+  };
+}
+function containsText(content, searchText) {
+  const text = extractTextFromTiptap(content).toLowerCase();
+  return text.includes(searchText.toLowerCase());
+}
+function replaceText(content, searchText, replaceText2) {
+  function processNode(node) {
+    const newNode = { ...node };
+    if ("text" in node && typeof node.text === "string") {
+      newNode.text = node.text.replace(
+        new RegExp(searchText, "gi"),
+        replaceText2
+      );
+    }
+    if ("content" in node && Array.isArray(node.content)) {
+      newNode.content = node.content.map((child) => processNode(child));
+    }
+    return newNode;
+  }
+  const newContent = {
+    ...content,
+    content: content.content.map((node) => processNode(node))
+  };
+  return newContent;
+}
+
+// src/color/index.ts
+function hexToRgb2(hex) {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  if (!result) {
+    throw new Error(`Invalid hex color: ${hex}`);
+  }
+  return {
+    r: parseInt(result[1], 16),
+    g: parseInt(result[2], 16),
+    b: parseInt(result[3], 16)
+  };
+}
+function rgbToHex(r, g, b) {
+  const toHex = (n) => {
+    const hex = Math.round(Math.max(0, Math.min(255, n))).toString(16);
+    return hex.length === 1 ? "0" + hex : hex;
+  };
+  return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+}
+function hexToHsl(hex) {
+  const rgb = hexToRgb2(hex);
+  const r = rgb.r / 255;
+  const g = rgb.g / 255;
+  const b = rgb.b / 255;
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  let h = 0;
+  let s = 0;
+  const l = (max + min) / 2;
+  if (max !== min) {
+    const d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    switch (max) {
+      case r:
+        h = ((g - b) / d + (g < b ? 6 : 0)) / 6;
+        break;
+      case g:
+        h = ((b - r) / d + 2) / 6;
+        break;
+      case b:
+        h = ((r - g) / d + 4) / 6;
+        break;
+    }
+  }
+  return {
+    h: Math.round(h * 360),
+    s: Math.round(s * 100),
+    l: Math.round(l * 100)
+  };
+}
+function hslToHex(h, s, l) {
+  h = h / 360;
+  s = s / 100;
+  l = l / 100;
+  let r, g, b;
+  if (s === 0) {
+    r = g = b = l;
+  } else {
+    const hue2rgb = (p2, q2, t) => {
+      if (t < 0) t += 1;
+      if (t > 1) t -= 1;
+      if (t < 1 / 6) return p2 + (q2 - p2) * 6 * t;
+      if (t < 1 / 2) return q2;
+      if (t < 2 / 3) return p2 + (q2 - p2) * (2 / 3 - t) * 6;
+      return p2;
+    };
+    const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+    const p = 2 * l - q;
+    r = hue2rgb(p, q, h + 1 / 3);
+    g = hue2rgb(p, q, h);
+    b = hue2rgb(p, q, h - 1 / 3);
+  }
+  return rgbToHex(Math.round(r * 255), Math.round(g * 255), Math.round(b * 255));
+}
+function adjustBrightness(hex, amount) {
+  const hsl = hexToHsl(hex);
+  const newL = Math.max(0, Math.min(100, hsl.l + amount));
+  return hslToHex(hsl.h, hsl.s, newL);
+}
+function adjustSaturation(hex, amount) {
+  const hsl = hexToHsl(hex);
+  const newS = Math.max(0, Math.min(100, hsl.s + amount));
+  return hslToHex(hsl.h, newS, hsl.l);
+}
+function adjustHue(hex, degrees) {
+  const hsl = hexToHsl(hex);
+  const newH = (hsl.h + degrees) % 360;
+  return hslToHex(newH < 0 ? newH + 360 : newH, hsl.s, hsl.l);
+}
+function lighten(hex, amount) {
+  return adjustBrightness(hex, amount);
+}
+function darken(hex, amount) {
+  return adjustBrightness(hex, -amount);
+}
+function hexToRgba(hex, alpha) {
+  const rgb = hexToRgb2(hex);
+  return `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${alpha})`;
+}
+function getComplementary(hex) {
+  return adjustHue(hex, 180);
+}
+function getAnalogousPalette(hex, count = 5) {
+  const hsl = hexToHsl(hex);
+  const step = 30;
+  const palette = [];
+  for (let i = 0; i < count; i++) {
+    const hue = (hsl.h + (i - Math.floor(count / 2)) * step) % 360;
+    palette.push(hslToHex(hue < 0 ? hue + 360 : hue, hsl.s, hsl.l));
+  }
+  return palette;
+}
+
 // src/dom/index.ts
 function prefersReducedMotion() {
   if (typeof window === "undefined") return false;
@@ -900,9 +925,314 @@ function downloadFile(blob, filename) {
   document.body.removeChild(link);
   URL.revokeObjectURL(url);
 }
+var DEFAULT_CONFIG = {
+  autoRefresh: true,
+  refreshInterval: 15 * 60 * 1e3,
+  // 15 minutes
+  tokenStorageKey: "auth_token",
+  userStorageKey: "auth_user",
+  apiEndpoint: "/api/auth",
+  onAuthChange: () => {
+  },
+  onError: () => {
+  }
+};
+var AuthStorage = class {
+  static setItem(key, value) {
+    if (!this.isClient) return;
+    try {
+      localStorage.setItem(key, value);
+    } catch (error) {
+      console.warn("Failed to save to localStorage:", error);
+    }
+  }
+  static getItem(key) {
+    if (!this.isClient) return null;
+    try {
+      return localStorage.getItem(key);
+    } catch (error) {
+      console.warn("Failed to read from localStorage:", error);
+      return null;
+    }
+  }
+  static removeItem(key) {
+    if (!this.isClient) return;
+    try {
+      localStorage.removeItem(key);
+    } catch (error) {
+      console.warn("Failed to remove from localStorage:", error);
+    }
+  }
+  static setUser(user, key) {
+    this.setItem(key, JSON.stringify(user));
+  }
+  static getUser(key) {
+    const data = this.getItem(key);
+    if (!data) return null;
+    try {
+      return JSON.parse(data);
+    } catch {
+      this.removeItem(key);
+      return null;
+    }
+  }
+  static removeUser(key) {
+    this.removeItem(key);
+  }
+};
+AuthStorage.isClient = typeof window !== "undefined";
+var TokenManager = class {
+  static decodeToken(token) {
+    try {
+      const payload = token.split(".")[1];
+      const decoded = atob(payload);
+      return JSON.parse(decoded);
+    } catch {
+      return null;
+    }
+  }
+  static isTokenExpired(token) {
+    const decoded = this.decodeToken(token);
+    if (!decoded) return true;
+    const now = Date.now() / 1e3;
+    return decoded.exp < now;
+  }
+};
+function useAuth(config = {}) {
+  const configRef = useRef({ ...DEFAULT_CONFIG, ...config });
+  const cfg = configRef.current;
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const refreshTimerRef = useRef(null);
+  const storeToken = useCallback((token, refreshToken2) => {
+    AuthStorage.setItem(cfg.tokenStorageKey, token);
+    if (refreshToken2) {
+      AuthStorage.setItem(`${cfg.tokenStorageKey}_refresh`, refreshToken2);
+    }
+  }, [cfg.tokenStorageKey]);
+  const getStoredToken = useCallback(() => {
+    return AuthStorage.getItem(cfg.tokenStorageKey);
+  }, [cfg.tokenStorageKey]);
+  const clearTokens = useCallback(() => {
+    AuthStorage.removeItem(cfg.tokenStorageKey);
+    AuthStorage.removeItem(`${cfg.tokenStorageKey}_refresh`);
+  }, [cfg.tokenStorageKey]);
+  const apiCall = useCallback(async (endpoint, options = {}) => {
+    const token = getStoredToken();
+    const url = `${cfg.apiEndpoint}${endpoint}`;
+    const response = await fetch(url, {
+      ...options,
+      headers: {
+        "Content-Type": "application/json",
+        ...token && { Authorization: `Bearer ${token}` },
+        ...options.headers
+      }
+    });
+    if (!response.ok) {
+      const error2 = await response.text();
+      throw new Error(error2 || `HTTP ${response.status}`);
+    }
+    return response.json();
+  }, [cfg.apiEndpoint, getStoredToken]);
+  const login = useCallback(async (credentials) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await apiCall("/login", {
+        method: "POST",
+        body: JSON.stringify(credentials)
+      });
+      if (response.success && response.user && response.token) {
+        setUser(response.user);
+        setIsAuthenticated(true);
+        storeToken(response.token, response.refreshToken);
+        if (cfg.onAuthChange) {
+          cfg.onAuthChange(response.user);
+        }
+        return { success: true, user: response.user, token: response.token };
+      } else {
+        const errorMsg = response.error || "Login failed";
+        setError(errorMsg);
+        if (cfg.onError) cfg.onError(errorMsg);
+        return { success: false, error: errorMsg };
+      }
+    } catch (error2) {
+      const errorMsg = error2 instanceof Error ? error2.message : "Login failed";
+      setError(errorMsg);
+      if (cfg.onError) cfg.onError(errorMsg);
+      return { success: false, error: errorMsg };
+    } finally {
+      setLoading(false);
+    }
+  }, [apiCall, setUser, storeToken, cfg]);
+  const logout = useCallback(async (options = {}) => {
+    try {
+      if (options.invalidateAllSessions) {
+        await apiCall("/logout", { method: "POST" });
+      }
+    } catch (error2) {
+      console.warn("Logout API call failed:", error2);
+    } finally {
+      setUser(null);
+      setIsAuthenticated(false);
+      clearTokens();
+      if (refreshTimerRef.current) {
+        clearInterval(refreshTimerRef.current);
+        refreshTimerRef.current = null;
+      }
+      if (cfg.onAuthChange) {
+        cfg.onAuthChange(null);
+      }
+    }
+  }, [apiCall, clearTokens, cfg]);
+  const register = useCallback(async (userData) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await apiCall("/register", {
+        method: "POST",
+        body: JSON.stringify(userData)
+      });
+      if (response.success && response.user && response.token) {
+        setUser(response.user);
+        setIsAuthenticated(true);
+        storeToken(response.token, response.refreshToken);
+        if (cfg.onAuthChange) {
+          cfg.onAuthChange(response.user);
+        }
+        return { success: true, user: response.user, token: response.token };
+      } else {
+        const errorMsg = response.error || "Registration failed";
+        setError(errorMsg);
+        if (cfg.onError) cfg.onError(errorMsg);
+        return { success: false, error: errorMsg };
+      }
+    } catch (error2) {
+      const errorMsg = error2 instanceof Error ? error2.message : "Registration failed";
+      setError(errorMsg);
+      if (cfg.onError) cfg.onError(errorMsg);
+      return { success: false, error: errorMsg };
+    } finally {
+      setLoading(false);
+    }
+  }, [apiCall, setUser, storeToken, cfg]);
+  const updateProfile = useCallback(async (data) => {
+    if (!user) {
+      const error2 = "No user logged in";
+      setError(error2);
+      if (cfg.onError) cfg.onError(error2);
+      return { success: false, error: error2 };
+    }
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await apiCall("/profile", {
+        method: "PUT",
+        body: JSON.stringify(data)
+      });
+      if (response.success && response.user) {
+        setUser(response.user);
+        if (cfg.onAuthChange) {
+          cfg.onAuthChange(response.user);
+        }
+        return { success: true, user: response.user };
+      } else {
+        const errorMsg = response.error || "Profile update failed";
+        setError(errorMsg);
+        if (cfg.onError) cfg.onError(errorMsg);
+        return { success: false, error: errorMsg };
+      }
+    } catch (error2) {
+      const errorMsg = error2 instanceof Error ? error2.message : "Profile update failed";
+      setError(errorMsg);
+      if (cfg.onError) cfg.onError(errorMsg);
+      return { success: false, error: errorMsg };
+    } finally {
+      setLoading(false);
+    }
+  }, [apiCall, user, setUser, cfg]);
+  const refreshToken = useCallback(async () => {
+    const refreshToken2 = AuthStorage.getItem(`${cfg.tokenStorageKey}_refresh`);
+    if (!refreshToken2) {
+      return { success: false, error: "No refresh token available" };
+    }
+    try {
+      const response = await apiCall("/refresh", {
+        method: "POST",
+        body: JSON.stringify({ refreshToken: refreshToken2 })
+      });
+      if (response.success && response.token && response.user) {
+        setUser(response.user);
+        storeToken(response.token, response.refreshToken);
+        if (cfg.onAuthChange) {
+          cfg.onAuthChange(response.user);
+        }
+        return { success: true, user: response.user, token: response.token };
+      } else {
+        await logout();
+        return { success: false, error: "Session expired" };
+      }
+    } catch (error2) {
+      await logout();
+      return { success: false, error: "Session expired" };
+    }
+  }, [apiCall, setUser, storeToken, logout, cfg]);
+  const resetError = useCallback(() => {
+    setError(null);
+  }, []);
+  useEffect(() => {
+    const token = getStoredToken();
+    const storedUser = AuthStorage.getUser(cfg.userStorageKey);
+    if (token && storedUser && !TokenManager.isTokenExpired(token)) {
+      setUser(storedUser);
+      setIsAuthenticated(true);
+      if (cfg.onAuthChange) {
+        cfg.onAuthChange(storedUser);
+      }
+    } else if (token && TokenManager.isTokenExpired(token)) {
+      refreshToken();
+    } else {
+      setLoading(false);
+    }
+    return () => {
+      if (refreshTimerRef.current) {
+        clearInterval(refreshTimerRef.current);
+      }
+    };
+  }, []);
+  return {
+    user,
+    loading,
+    error,
+    isAuthenticated,
+    login,
+    logout,
+    register,
+    updateProfile,
+    refreshToken,
+    resetError
+  };
+}
+function useIsAuthenticated() {
+  const { isAuthenticated } = useAuth();
+  return isAuthenticated;
+}
+function useCurrentUser() {
+  const { user } = useAuth();
+  return user;
+}
+function useHasRole(role) {
+  const { user } = useAuth();
+  return user?.role === role;
+}
+function useIsAdmin() {
+  return useHasRole("admin" /* ADMIN */);
+}
 
 // src/stats/index.ts
-function formatNumber2(num) {
+function formatNumber(num) {
   if (num >= 1e6) {
     return (num / 1e6).toFixed(1) + "M";
   }
@@ -1106,6 +1436,109 @@ function calculateSimilarity(str1, str2) {
   const similarity = common / Math.max(str1.length, str2.length);
   return similarity;
 }
+
+// src/string/index.ts
+function textToSlug(text) {
+  return text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^\w\s-]/g, "").trim().replace(/\s+/g, "-").replace(/-+/g, "-");
+}
+function truncate(text, maxLength, suffix = "...") {
+  if (text.length <= maxLength) return text;
+  return text.slice(0, maxLength - suffix.length) + suffix;
+}
+function getInitials(name, maxInitials = 2) {
+  return name.split(" ").filter((word) => word.length > 0).map((word) => word[0]).join("").toUpperCase().slice(0, maxInitials);
+}
+function formatPhone(phone) {
+  const digits = phone.replace(/\D/g, "");
+  if (digits.length === 11) {
+    return digits.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
+  }
+  return digits.replace(/(\d{2})(\d{4})(\d{4})/, "($1) $2-$3");
+}
+function formatCPF(cpf) {
+  const digits = cpf.replace(/\D/g, "");
+  return digits.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+}
+function formatCNPJ(cnpj) {
+  const digits = cnpj.replace(/\D/g, "");
+  return digits.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, "$1.$2.$3/$4-$5");
+}
+function isCPF(cpf) {
+  const digits = cpf.replace(/\D/g, "");
+  if (digits.length !== 11 || /^(\d)\1{10}$/.test(digits)) {
+    return false;
+  }
+  let sum = 0;
+  for (let i = 0; i < 9; i++) {
+    sum += parseInt(digits.charAt(i)) * (10 - i);
+  }
+  let remainder = sum * 10 % 11;
+  if (remainder === 10 || remainder === 11) remainder = 0;
+  if (remainder !== parseInt(digits.charAt(9))) {
+    return false;
+  }
+  sum = 0;
+  for (let i = 0; i < 10; i++) {
+    sum += parseInt(digits.charAt(i)) * (11 - i);
+  }
+  remainder = sum * 10 % 11;
+  if (remainder === 10 || remainder === 11) remainder = 0;
+  if (remainder !== parseInt(digits.charAt(10))) {
+    return false;
+  }
+  return true;
+}
+function isCNPJ(cnpj) {
+  const digits = cnpj.replace(/\D/g, "");
+  if (digits.length !== 14 || /^(\d)\1{13}$/.test(digits)) {
+    return false;
+  }
+  const weights1 = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+  let sum = 0;
+  for (let i = 0; i < 12; i++) {
+    sum += parseInt(digits.charAt(i)) * weights1[i];
+  }
+  let remainder = sum % 11;
+  const digit1 = remainder < 2 ? 0 : 11 - remainder;
+  if (digit1 !== parseInt(digits.charAt(12))) {
+    return false;
+  }
+  const weights2 = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+  sum = 0;
+  for (let i = 0; i < 13; i++) {
+    sum += parseInt(digits.charAt(i)) * weights2[i];
+  }
+  remainder = sum % 11;
+  const digit2 = remainder < 2 ? 0 : 11 - remainder;
+  if (digit2 !== parseInt(digits.charAt(13))) {
+    return false;
+  }
+  return true;
+}
+
+// src/number/index.ts
+function formatCurrency(value, locale = DEFAULT_LOCALE, options) {
+  const currency = CURRENCY_MAP[locale];
+  return new Intl.NumberFormat(locale, {
+    style: "currency",
+    currency,
+    ...options
+  }).format(value);
+}
+function formatNumber2(value, decimals = 0, locale = DEFAULT_LOCALE) {
+  return new Intl.NumberFormat(locale, {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals
+  }).format(value);
+}
+function formatCompact(value, decimals = 1, locale = DEFAULT_LOCALE) {
+  return new Intl.NumberFormat(locale, {
+    notation: "compact",
+    compactDisplay: "short",
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals
+  }).format(value);
+}
 function usePasswordStrength(password, options = {}) {
   const {
     minLength = 8,
@@ -1296,6 +1729,7 @@ function usePasswordStrength(password, options = {}) {
 // src/pt-br.ts
 var pt_br_exports = {};
 __export(pt_br_exports, {
+  default: () => pt_br_default,
   formatCompact: () => formatCompact2,
   formatCurrency: () => formatCurrency2,
   formatDate: () => formatDate2,
@@ -1317,13 +1751,166 @@ function formatCurrency2(value, options) {
   return formatCurrency(value, "pt-BR", options);
 }
 function formatNumber3(value, decimals = 0) {
-  return formatNumber(value, decimals, "pt-BR");
+  return formatNumber2(value, decimals, "pt-BR");
 }
 function formatCompact2(value, decimals = 1) {
   return formatCompact(value, decimals, "pt-BR");
 }
 function translateStatus2(status) {
   return translateStatus(status, "pt-BR");
+}
+var pt_br_default = {
+  formatDate: formatDate2,
+  formatDateTime: formatDateTime2,
+  formatRelativeDate: formatRelativeDate2,
+  formatCurrency: formatCurrency2,
+  formatNumber: formatNumber3,
+  formatCompact: formatCompact2,
+  translateStatus: translateStatus2
+};
+
+// src/text/index.ts
+var text_exports = {};
+__export(text_exports, {
+  calculateReadingTime: () => calculateReadingTime,
+  capitalize: () => capitalize,
+  cleanText: () => cleanText2,
+  countWords: () => countWords2,
+  extractInitials: () => extractInitials,
+  generateAvatarUrl: () => generateAvatarUrl,
+  generateDynamicAvatarUrl: () => generateDynamicAvatarUrl,
+  generateUniqueId: () => generateUniqueId,
+  getAvatarColorFromName: () => getAvatarColorFromName,
+  isEmpty: () => isEmpty,
+  isValidAvatarUrl: () => isValidAvatarUrl,
+  normalizeSpaces: () => normalizeSpaces,
+  truncateText: () => truncateText
+});
+function extractInitials(name, maxChars = 2) {
+  if (!name || !name.trim()) {
+    return "";
+  }
+  const words = name.trim().split(/\s+/);
+  const initials = words.slice(0, maxChars).map((word) => word.charAt(0).toUpperCase()).join("");
+  return initials;
+}
+function generateAvatarUrl(name, size = 200, backgroundColor = "0891b2", textColor = "fff") {
+  const encodedName = encodeURIComponent(name);
+  return `https://ui-avatars.com/api/?name=${encodedName}&size=${size}&background=${backgroundColor}&color=${textColor}&font-size=0.5`;
+}
+function isValidAvatarUrl(url) {
+  if (!url || typeof url !== "string") {
+    return false;
+  }
+  try {
+    new URL(url);
+    return true;
+  } catch {
+    return false;
+  }
+}
+function getAvatarColorFromName(name) {
+  if (!name || typeof name !== "string") {
+    return "#0891b2";
+  }
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) {
+    hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const colors = [
+    "#0891b2",
+    // cyan-600
+    "#9333ea",
+    // purple-600
+    "#db2777",
+    // pink-600
+    "#059669",
+    // emerald-600
+    "#2563eb",
+    // blue-600
+    "#f97316",
+    // orange-500
+    "#dc2626",
+    // red-600
+    "#7c3aed"
+    // violet-600
+  ];
+  const index = Math.abs(hash) % colors.length;
+  return colors[index];
+}
+function generateDynamicAvatarUrl(name, size = 200) {
+  const color = getAvatarColorFromName(name);
+  const colorHex = color.replace("#", "");
+  return generateAvatarUrl(name, size, colorHex, "fff");
+}
+function generateUniqueId(text, prefix = "", suffix = "") {
+  const slug = text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^\w\s-]/g, "").replace(/\s+/g, "-").replace(/-+/g, "-").trim().substring(0, 50);
+  const parts = [prefix, slug, suffix].filter(Boolean);
+  return parts.join("-");
+}
+function truncateText(text, maxLength, suffix = "...") {
+  if (!text || text.length <= maxLength) {
+    return text || "";
+  }
+  return text.substring(0, maxLength - suffix.length) + suffix;
+}
+function capitalize(text, options = {}) {
+  if (!text) return "";
+  const { firstWordOnly = false, lowerRest = false } = options;
+  if (firstWordOnly) {
+    return text.charAt(0).toUpperCase() + (lowerRest ? text.slice(1).toLowerCase() : text.slice(1));
+  }
+  if (lowerRest) {
+    return text.replace(/\b\w/g, (char) => char.toUpperCase()).toLowerCase();
+  }
+  return text.replace(/\b\w/g, (char) => char.toUpperCase());
+}
+function cleanText2(text, allowSpaces = true) {
+  if (!text) return "";
+  const pattern = allowSpaces ? /[^\w\s]/g : /[^\w]/g;
+  return text.replace(pattern, "");
+}
+function countWords2(text) {
+  if (!text || !text.trim()) {
+    return 0;
+  }
+  return text.trim().split(/\s+/).length;
+}
+function isEmpty(text) {
+  return !text || !text.trim();
+}
+function normalizeSpaces(text, options = {}) {
+  if (!text) return "";
+  const { newlines = false } = options;
+  let cleaned = text;
+  if (newlines) {
+    cleaned = cleaned.replace(/\s+/g, " ");
+  } else {
+    cleaned = cleaned.replace(/\s+/g, " ");
+  }
+  return cleaned.trim();
+}
+function calculateReadingTime(content, wordsPerMinute = 200) {
+  let text = "";
+  if (typeof content === "object" && content !== null) {
+    const extractText = (node) => {
+      if (!node) return "";
+      let result = "";
+      if (node.text) {
+        result += node.text + " ";
+      }
+      if (Array.isArray(node.content)) {
+        result += node.content.map(extractText).join(" ");
+      }
+      return result;
+    };
+    text = extractText(content);
+  } else if (typeof content === "string") {
+    text = content.replace(/<[^>]*>/g, "");
+  }
+  const words = text.trim().split(/\s+/).filter((word) => word.length > 0).length;
+  const time = Math.ceil(words / wordsPerMinute);
+  return time > 0 ? time : 1;
 }
 
 // src/index.ts
@@ -1332,6 +1919,6 @@ var datetime = date_exports;
 var authentication = authentication_exports;
 var stateManagement = status_exports;
 
-export { CURRENCY_MAP, DEFAULT_LOCALE, authentication, calculateChange, calculateMovingAverage, calculateReadingTime, capitalize, cleanText, copyToClipboard, countWords, datetime, downloadFile, extractInitials, findMinMax, formatCNPJ, formatCPF, formatCurrency, formatDate, formatDateTime, formatNumber2 as formatNumber, formatPercentage, formatPhone, formatRelativeDate, fuzzySearch, generateAvatarUrl, generateDynamicAvatarUrl, generateMockChartData, generateUniqueId, getAvatarColorFromName, getElementPosition, getRefreshToken, getStatusColor, getStatusVariant, getToken, getTokens, groupDataByPeriod, hasToken, isCNPJ, isCPF, isDarkMode, isElementVisible, isEmpty, isMobile, isValidAvatarUrl, isValidDate, normalizeSpaces, onDarkModeChange, onReducedMotionChange, prefersReducedMotion, pt_br_exports as ptBR, removeToken, scrollToElement, scrollToPosition, scrollToTop, searchContent, searchWithScore, setRefreshToken, setToken, setTokens, smoothScrollTo, stateManagement, textProcessing, textToSlug, toISOString, translatePostStatus, translateStatus, truncateText, usePasswordStrength, validateEmail, validateMessage, validatePassword, validatePhone, validateSlug, validateText, validateUrl, validateUsername };
+export { CURRENCY_MAP, DEFAULT_LOCALE, adjustBrightness, adjustHue, adjustSaturation, authentication, calculateChange, calculateMovingAverage, calculateReadingTime, capitalize, cleanText2 as cleanText, containsText, copyToClipboard, countCharacters, countWords2 as countWords, createEmptyTiptapContent, darken, datetime, downloadFile, extractInitials, extractTextFromTiptap, findMinMax, formatCNPJ, formatCPF, formatCurrency, formatDate, formatDateTime, formatNumber, formatPercentage, formatPhone, formatRelativeDate, fuzzySearch, generateAvatarUrl, generateDynamicAvatarUrl, generateExcerpt, generateMockChartData, generateUniqueId, getAnalogousPalette, getAvatarColorFromName, getComplementary, getContentStats, getElementPosition, getInitials, getReadingTime, getRefreshToken, getStatusColor, getStatusVariant, getToken, getTokens, groupDataByPeriod, hasToken, hexToHsl, hexToRgb, hexToRgba, hslToHex, isCNPJ, isCPF, isContentEmpty, isDarkMode, isElementVisible, isEmpty, isMobile, isValidAvatarUrl, isValidDate, lighten, normalizeSpaces, onDarkModeChange, onReducedMotionChange, prefersReducedMotion, pt_br_exports as ptBR, removeToken, replaceText, rgbToHex, scrollToElement, scrollToPosition, scrollToTop, searchContent, searchWithScore, setRefreshToken, setToken, setTokens, smoothScrollTo, stateManagement, textProcessing, textToSlug, toISOString, translatePostStatus, translateStatus, truncate, truncateText, useAuth, useCurrentUser, useHasRole, useIsAdmin, useIsAuthenticated, usePasswordStrength, validateContrast, validateEmail, validateMessage, validatePassword, validatePhone, validateSlug, validateText, validateUrl, validateUsername };
 //# sourceMappingURL=index.mjs.map
 //# sourceMappingURL=index.mjs.map

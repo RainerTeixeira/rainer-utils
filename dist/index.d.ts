@@ -1,50 +1,29 @@
 import { L as Locale } from './types-tUMATEGI.js';
 export { C as CURRENCY_MAP, D as DEFAULT_LOCALE, a as LocaleConfig } from './types-tUMATEGI.js';
-export { formatCNPJ, formatCPF, formatPhone, isCNPJ, isCPF, textToSlug } from './string/index.js';
 import { d as dateModule } from './index-BA11MtKk.js';
 export { f as formatDate, a as formatDateTime, b as formatRelativeDate, i as isValidDate, t as toISOString } from './index-BA11MtKk.js';
-export { formatCurrency } from './number/index.js';
 import { s as statusModule } from './index-BfZE8XjJ.js';
 export { G as GenericStatus, g as getStatusColor, a as getStatusVariant, b as translatePostStatus, t as translateStatus } from './index-BfZE8XjJ.js';
 import { a as authModule } from './index-DeZ9ZulO.js';
 export { b as getRefreshToken, g as getToken, d as getTokens, h as hasToken, r as removeToken, c as setRefreshToken, s as setToken, e as setTokens } from './index-DeZ9ZulO.js';
 export { SearchOptions, fuzzySearch, searchContent, searchWithScore } from './search/index.js';
+export { formatCNPJ, formatCPF, formatPhone, getInitials, isCNPJ, isCPF, textToSlug, truncate } from './string/index.js';
+export { formatCurrency } from './number/index.js';
 
-declare function extractInitials(name: string | null | undefined, maxChars?: number): string;
-declare function generateAvatarUrl(name: string, size?: number, backgroundColor?: string, textColor?: string): string;
-declare function isValidAvatarUrl(url: string): boolean;
-declare function getAvatarColorFromName(name: string): string;
-declare function generateDynamicAvatarUrl(name: string, size?: number): string;
-declare function generateUniqueId(text: string, prefix?: string, suffix?: string): string;
-declare function truncateText(text: string, maxLength: number, suffix?: string): string;
-declare function capitalize(text: string, options?: {
-    firstWordOnly?: boolean;
-    lowerRest?: boolean;
-}): string;
-declare function cleanText(text: string, allowSpaces?: boolean): string;
-declare function countWords(text: string): number;
-declare function isEmpty(text: string | null | undefined): boolean;
-declare function normalizeSpaces(text: string, options?: {
-    newlines?: boolean;
-}): string;
-declare function calculateReadingTime(content: string | Record<string, any>, wordsPerMinute?: number): number;
-
-declare const textModule_calculateReadingTime: typeof calculateReadingTime;
-declare const textModule_capitalize: typeof capitalize;
-declare const textModule_cleanText: typeof cleanText;
-declare const textModule_countWords: typeof countWords;
-declare const textModule_extractInitials: typeof extractInitials;
-declare const textModule_generateAvatarUrl: typeof generateAvatarUrl;
-declare const textModule_generateDynamicAvatarUrl: typeof generateDynamicAvatarUrl;
-declare const textModule_generateUniqueId: typeof generateUniqueId;
-declare const textModule_getAvatarColorFromName: typeof getAvatarColorFromName;
-declare const textModule_isEmpty: typeof isEmpty;
-declare const textModule_isValidAvatarUrl: typeof isValidAvatarUrl;
-declare const textModule_normalizeSpaces: typeof normalizeSpaces;
-declare const textModule_truncateText: typeof truncateText;
-declare namespace textModule {
-  export { textModule_calculateReadingTime as calculateReadingTime, textModule_capitalize as capitalize, textModule_cleanText as cleanText, textModule_countWords as countWords, textModule_extractInitials as extractInitials, textModule_generateAvatarUrl as generateAvatarUrl, textModule_generateDynamicAvatarUrl as generateDynamicAvatarUrl, textModule_generateUniqueId as generateUniqueId, textModule_getAvatarColorFromName as getAvatarColorFromName, textModule_isEmpty as isEmpty, textModule_isValidAvatarUrl as isValidAvatarUrl, textModule_normalizeSpaces as normalizeSpaces, textModule_truncateText as truncateText };
-}
+declare function hexToRgb(hex: string): {
+    r: number;
+    g: number;
+    b: number;
+};
+declare function validateContrast(foreground: string, background: string, options?: {
+    requireAAA?: boolean;
+    largeText?: boolean;
+}): {
+    valid: boolean;
+    level: string;
+    contrast: number;
+    message: string;
+};
 
 interface ValidationResult {
     isValid: boolean;
@@ -79,6 +58,47 @@ declare function validateMessage(message: string, options?: {
     maxLength?: number;
 }, locale?: Locale): ValidationResult;
 
+interface TiptapNode {
+    type: string;
+    text?: string;
+    content?: TiptapNode[];
+    attrs?: Record<string, any>;
+}
+interface TiptapJSON {
+    type: 'doc';
+    content: TiptapNode[];
+}
+interface ContentStats {
+    wordCount: number;
+    characterCount: number;
+    readingTime: number;
+}
+declare function extractTextFromTiptap(content: TiptapJSON): string;
+declare function generateExcerpt(content: TiptapJSON, maxLength?: number): string;
+declare function createEmptyTiptapContent(): TiptapJSON;
+declare function isContentEmpty(content: TiptapJSON): boolean;
+declare function countCharacters(content: TiptapJSON): number;
+declare function getReadingTime(content: TiptapJSON, wordsPerMinute?: number): number;
+declare function getContentStats(content: TiptapJSON): ContentStats;
+declare function containsText(content: TiptapJSON, searchText: string): boolean;
+declare function replaceText(content: TiptapJSON, searchText: string, replaceText: string): TiptapJSON;
+
+declare function rgbToHex(r: number, g: number, b: number): string;
+declare function hexToHsl(hex: string): {
+    h: number;
+    s: number;
+    l: number;
+};
+declare function hslToHex(h: number, s: number, l: number): string;
+declare function adjustBrightness(hex: string, amount: number): string;
+declare function adjustSaturation(hex: string, amount: number): string;
+declare function adjustHue(hex: string, degrees: number): string;
+declare function lighten(hex: string, amount: number): string;
+declare function darken(hex: string, amount: number): string;
+declare function hexToRgba(hex: string, alpha: number): string;
+declare function getComplementary(hex: string): string;
+declare function getAnalogousPalette(hex: string, count?: number): string[];
+
 declare function prefersReducedMotion(): boolean;
 declare function onReducedMotionChange(callback: (prefersReduced: boolean) => void): () => void;
 declare function scrollToPosition(x?: number, y?: number, options?: {
@@ -102,6 +122,72 @@ declare function isDarkMode(): boolean;
 declare function onDarkModeChange(callback: (isDark: boolean) => void): () => void;
 declare function copyToClipboard(text: string): Promise<boolean>;
 declare function downloadFile(blob: Blob, filename: string): void;
+
+interface UserProfile {
+    id: string;
+    nickname: string;
+    email?: string;
+    emailVerified?: boolean;
+    role?: UserRole;
+    avatar?: string;
+    createdAt?: string;
+    updatedAt?: string;
+    lastLoginAt?: string;
+}
+declare enum UserRole {
+    ADMIN = "admin",
+    MODERATOR = "moderator",
+    USER = "user",
+    GUEST = "guest"
+}
+interface LoginCredentials {
+    email: string;
+    password: string;
+    rememberMe?: boolean;
+}
+interface RegisterData {
+    nickname: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+    role?: UserRole;
+}
+interface LogoutOptions {
+    invalidateAllSessions?: boolean;
+    redirectPath?: string;
+}
+interface AuthResult {
+    success: boolean;
+    user?: UserProfile;
+    token?: string;
+    refreshToken?: string;
+    error?: string;
+}
+interface UseAuthConfig {
+    autoRefresh?: boolean;
+    refreshInterval?: number;
+    tokenStorageKey?: string;
+    userStorageKey?: string;
+    apiEndpoint?: string;
+    onAuthChange?: (user: UserProfile | null) => void;
+    onError?: (error: string) => void;
+}
+declare function useAuth(config?: Partial<UseAuthConfig>): {
+    user: UserProfile | null;
+    loading: boolean;
+    error: string | null;
+    isAuthenticated: boolean;
+    login: (credentials: LoginCredentials) => Promise<AuthResult>;
+    logout: (options?: LogoutOptions) => Promise<void>;
+    register: (userData: RegisterData) => Promise<AuthResult>;
+    updateProfile: (data: Partial<UserProfile>) => Promise<AuthResult>;
+    refreshToken: () => Promise<AuthResult>;
+    resetError: () => void;
+};
+declare function useIsAuthenticated(): boolean;
+declare function useCurrentUser(): UserProfile | null;
+declare function useHasRole(role: UserRole): boolean;
+declare function useIsAdmin(): boolean;
 
 declare function formatNumber$1(num: number): string;
 declare function calculateChange(current: number, previous: number): number;
@@ -170,6 +256,15 @@ declare function formatCurrency(value: number, options?: Intl.NumberFormatOption
 declare function formatNumber(value: number, decimals?: number): string;
 declare function formatCompact(value: number, decimals?: number): string;
 declare function translateStatus(status: string): string;
+declare const _default: {
+    formatDate: typeof formatDate;
+    formatDateTime: typeof formatDateTime;
+    formatRelativeDate: typeof formatRelativeDate;
+    formatCurrency: typeof formatCurrency;
+    formatNumber: typeof formatNumber;
+    formatCompact: typeof formatCompact;
+    translateStatus: typeof translateStatus;
+};
 
 declare const ptBr_formatCompact: typeof formatCompact;
 declare const ptBr_formatCurrency: typeof formatCurrency;
@@ -179,7 +274,43 @@ declare const ptBr_formatNumber: typeof formatNumber;
 declare const ptBr_formatRelativeDate: typeof formatRelativeDate;
 declare const ptBr_translateStatus: typeof translateStatus;
 declare namespace ptBr {
-  export { ptBr_formatCompact as formatCompact, ptBr_formatCurrency as formatCurrency, ptBr_formatDate as formatDate, ptBr_formatDateTime as formatDateTime, ptBr_formatNumber as formatNumber, ptBr_formatRelativeDate as formatRelativeDate, ptBr_translateStatus as translateStatus };
+  export { _default as default, ptBr_formatCompact as formatCompact, ptBr_formatCurrency as formatCurrency, ptBr_formatDate as formatDate, ptBr_formatDateTime as formatDateTime, ptBr_formatNumber as formatNumber, ptBr_formatRelativeDate as formatRelativeDate, ptBr_translateStatus as translateStatus };
+}
+
+declare function extractInitials(name: string | null | undefined, maxChars?: number): string;
+declare function generateAvatarUrl(name: string, size?: number, backgroundColor?: string, textColor?: string): string;
+declare function isValidAvatarUrl(url: string): boolean;
+declare function getAvatarColorFromName(name: string): string;
+declare function generateDynamicAvatarUrl(name: string, size?: number): string;
+declare function generateUniqueId(text: string, prefix?: string, suffix?: string): string;
+declare function truncateText(text: string, maxLength: number, suffix?: string): string;
+declare function capitalize(text: string, options?: {
+    firstWordOnly?: boolean;
+    lowerRest?: boolean;
+}): string;
+declare function cleanText(text: string, allowSpaces?: boolean): string;
+declare function countWords(text: string): number;
+declare function isEmpty(text: string | null | undefined): boolean;
+declare function normalizeSpaces(text: string, options?: {
+    newlines?: boolean;
+}): string;
+declare function calculateReadingTime(content: string | Record<string, any>, wordsPerMinute?: number): number;
+
+declare const textModule_calculateReadingTime: typeof calculateReadingTime;
+declare const textModule_capitalize: typeof capitalize;
+declare const textModule_cleanText: typeof cleanText;
+declare const textModule_countWords: typeof countWords;
+declare const textModule_extractInitials: typeof extractInitials;
+declare const textModule_generateAvatarUrl: typeof generateAvatarUrl;
+declare const textModule_generateDynamicAvatarUrl: typeof generateDynamicAvatarUrl;
+declare const textModule_generateUniqueId: typeof generateUniqueId;
+declare const textModule_getAvatarColorFromName: typeof getAvatarColorFromName;
+declare const textModule_isEmpty: typeof isEmpty;
+declare const textModule_isValidAvatarUrl: typeof isValidAvatarUrl;
+declare const textModule_normalizeSpaces: typeof normalizeSpaces;
+declare const textModule_truncateText: typeof truncateText;
+declare namespace textModule {
+  export { textModule_calculateReadingTime as calculateReadingTime, textModule_capitalize as capitalize, textModule_cleanText as cleanText, textModule_countWords as countWords, textModule_extractInitials as extractInitials, textModule_generateAvatarUrl as generateAvatarUrl, textModule_generateDynamicAvatarUrl as generateDynamicAvatarUrl, textModule_generateUniqueId as generateUniqueId, textModule_getAvatarColorFromName as getAvatarColorFromName, textModule_isEmpty as isEmpty, textModule_isValidAvatarUrl as isValidAvatarUrl, textModule_normalizeSpaces as normalizeSpaces, textModule_truncateText as truncateText };
 }
 
 declare const textProcessing: typeof textModule;
@@ -187,4 +318,4 @@ declare const datetime: typeof dateModule;
 declare const authentication: typeof authModule;
 declare const stateManagement: typeof statusModule;
 
-export { Locale, type ValidationResult, authentication, calculateChange, calculateMovingAverage, calculateReadingTime, capitalize, cleanText, copyToClipboard, countWords, datetime, downloadFile, extractInitials, findMinMax, formatNumber$1 as formatNumber, formatPercentage, generateAvatarUrl, generateDynamicAvatarUrl, generateMockChartData, generateUniqueId, getAvatarColorFromName, getElementPosition, groupDataByPeriod, isDarkMode, isElementVisible, isEmpty, isMobile, isValidAvatarUrl, normalizeSpaces, onDarkModeChange, onReducedMotionChange, prefersReducedMotion, ptBr as ptBR, scrollToElement, scrollToPosition, scrollToTop, smoothScrollTo, stateManagement, textProcessing, truncateText, usePasswordStrength, validateEmail, validateMessage, validatePassword, validatePhone, validateSlug, validateText, validateUrl, validateUsername };
+export { type ContentStats, Locale, type TiptapJSON, type TiptapNode, type ValidationResult, adjustBrightness, adjustHue, adjustSaturation, authentication, calculateChange, calculateMovingAverage, calculateReadingTime, capitalize, cleanText, containsText, copyToClipboard, countCharacters, countWords, createEmptyTiptapContent, darken, datetime, downloadFile, extractInitials, extractTextFromTiptap, findMinMax, formatNumber$1 as formatNumber, formatPercentage, generateAvatarUrl, generateDynamicAvatarUrl, generateExcerpt, generateMockChartData, generateUniqueId, getAnalogousPalette, getAvatarColorFromName, getComplementary, getContentStats, getElementPosition, getReadingTime, groupDataByPeriod, hexToHsl, hexToRgb, hexToRgba, hslToHex, isContentEmpty, isDarkMode, isElementVisible, isEmpty, isMobile, isValidAvatarUrl, lighten, normalizeSpaces, onDarkModeChange, onReducedMotionChange, prefersReducedMotion, ptBr as ptBR, replaceText, rgbToHex, scrollToElement, scrollToPosition, scrollToTop, smoothScrollTo, stateManagement, textProcessing, truncateText, useAuth, useCurrentUser, useHasRole, useIsAdmin, useIsAuthenticated, usePasswordStrength, validateContrast, validateEmail, validateMessage, validatePassword, validatePhone, validateSlug, validateText, validateUrl, validateUsername };

@@ -10,74 +10,64 @@
  * @version 1.3.0
  */
 
-// ============================================================================
-// TYPES
-// ============================================================================
+// Exportações principais
 export * from './types';
 
-// ============================================================================
-// TEXT PROCESSING (Nome descritivo)
-// ============================================================================
-export * from './text';
+// Exportações específicas para evitar conflitos de nomes
+export { hexToRgb, validateContrast } from './accessibility';
+
+// Exportações restantes
+export * from './date';
+export * from './status';
+export * from './validation';
+export * from './content';
+export * from './color';
+export * from './dom';
+export * from './hooks';
+export * from './stats';
+export * from './authentication';
+export * from './search';
 
 // ============================================================================
 // STRING UTILITIES (sem conflitos)
 // ============================================================================
-export { textToSlug, formatPhone, formatCPF, formatCNPJ, isCPF, isCNPJ } from './string';
-
-// ============================================================================
-// DATETIME (Nome descritivo)
-// ============================================================================
-export * from './date';
-
-// ============================================================================
-// NUMBER UTILITIES (sem conflitos)
-// ============================================================================
+export { 
+  textToSlug, 
+  formatPhone, 
+  formatCPF, 
+  formatCNPJ, 
+  isCPF, 
+  isCNPJ,
+  getInitials,
+  truncate,
+} from './string';
 export { formatCurrency } from './number';
+export { usePasswordStrength } from './hooks/use-password-strength';
 
-// ============================================================================
-// STATE MANAGEMENT (Nome descritivo)
-// ============================================================================
-export * from './status';
+// Exportações type
+export type { TiptapNode, TiptapJSON, ContentStats } from './content';
 
-// ============================================================================
-// VALIDATION UTILITIES
-// ============================================================================
-export * from './validation';
-
-// ============================================================================
-// DOM UTILITIES
-// ============================================================================
-export * from './dom';
-
-// ============================================================================
-// STATS UTILITIES
-// ============================================================================
-export * from './stats';
-
-// ============================================================================
-// AUTHENTICATION (Nome descritivo)
-// ============================================================================
-export * from './authentication';
-
-// ============================================================================
-// SEARCH UTILITIES
-// ============================================================================
-export * from './search';
-
-// ============================================================================
-// HOOKS
-// ============================================================================
-export * from './hooks/use-password-strength';
-
-// ============================================================================
-// PT-BR HELPERS (Pré-configurado para português)
-// ============================================================================
+// Helpers pt-BR
 export * as ptBR from './pt-br';
 
-// ============================================================================
-// MÓDULOS COM NOMES DESCRITIVOS (Novos aliases profissionais)
-// ============================================================================
+// Exportações de texto (text utilities)
+export {
+  extractInitials,
+  generateAvatarUrl,
+  isValidAvatarUrl,
+  getAvatarColorFromName,
+  generateDynamicAvatarUrl,
+  generateUniqueId,
+  truncateText,
+  capitalize,
+  cleanText,
+  countWords,
+  isEmpty,
+  normalizeSpaces,
+  calculateReadingTime
+} from './text';
+
+// Aliases descritivos
 import * as textModule from './text';
 import * as dateModule from './date';
 import * as authModule from './authentication';
