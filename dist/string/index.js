@@ -2,7 +2,7 @@
 
 // src/string/index.ts
 function textToSlug(text) {
-  return text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^\w\s-]/g, "").trim().replace(/\s+/g, "-").replace(/-+/g, "-");
+  return text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^\w\s-]/g, "").trim().replace(/^-+|-+$/g, "").replace(/\s+/g, "-").replace(/-+/g, "-");
 }
 function capitalize(text) {
   return text.toLowerCase().split(" ").map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(" ");

@@ -1,10 +1,12 @@
 import React, { useRef, useState, useCallback, useEffect } from 'react';
 
 var __defProp = Object.defineProperty;
+var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
 var __export = (target, all) => {
   for (var name in all)
     __defProp(target, name, { get: all[name], enumerable: true });
 };
+var __publicField = (obj, key, value) => __defNormalProp(obj, key + "" , value);
 
 // src/types.ts
 var DEFAULT_LOCALE = "pt-BR";
@@ -980,7 +982,7 @@ var AuthStorage = class {
     this.removeItem(key);
   }
 };
-AuthStorage.isClient = typeof window !== "undefined";
+__publicField(AuthStorage, "isClient", typeof window !== "undefined");
 var TokenManager = class {
   static decodeToken(token) {
     try {
@@ -1439,7 +1441,7 @@ function calculateSimilarity(str1, str2) {
 
 // src/string/index.ts
 function textToSlug(text) {
-  return text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^\w\s-]/g, "").trim().replace(/\s+/g, "-").replace(/-+/g, "-");
+  return text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^\w\s-]/g, "").trim().replace(/^-+|-+$/g, "").replace(/\s+/g, "-").replace(/-+/g, "-");
 }
 function truncate(text, maxLength, suffix = "...") {
   if (text.length <= maxLength) return text;

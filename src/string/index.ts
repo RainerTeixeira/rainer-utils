@@ -25,6 +25,7 @@ export function textToSlug(text: string): string {
     .replace(/[\u0300-\u036f]/g, '')
     .replace(/[^\w\s-]/g, '')
     .trim()
+    .replace(/^-+|-+$/g, '') // Remove hífens do início e fim
     .replace(/\s+/g, '-')
     .replace(/-+/g, '-');
 }
