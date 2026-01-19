@@ -12,21 +12,23 @@
 
 // Exportações principais
 export * from './types';
+export * from './utils';
 
 // Exportações específicas para evitar conflitos de nomes
-export { hexToRgb, validateContrast } from './accessibility';
+export { hexToRgb } from './color';
 
 // Exportações restantes
 export * from './date';
 export * from './status';
 export * from './validation';
-export * from './content';
 export * from './color';
 export * from './dom';
-export * from './hooks';
 export * from './stats';
 export * from './authentication';
 export * from './search';
+export * from './image';
+export * from './cookie';
+export * from './hooks'; // ✅ NOVO: Hooks migrados
 
 // ============================================================================
 // STRING UTILITIES (sem conflitos)
@@ -42,10 +44,9 @@ export {
   truncate,
 } from './string';
 export { formatCurrency } from './number';
-export { usePasswordStrength } from './hooks/use-password-strength';
 
-// Exportações type
-export type { TiptapNode, TiptapJSON, ContentStats } from './content';
+// Exportações type - mantidos apenas os que existem
+// export type { TiptapNode, TiptapJSON, ContentStats } from './content';
 
 // Helpers pt-BR
 export * as ptBR from './pt-br';

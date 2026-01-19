@@ -1,13 +1,13 @@
 /**
- * useAuth Hook - Authentication Management
- * 
- * Hook React profissional para gerenciar estado de autenticação.
- * Implementa padrões de segurança, persistência e tratamento de erros.
- * 
+ * useAuth Hook - Gestão de Autenticação
+ *
+ * Hook React para gerenciar estado de autenticação com persistência,
+ * refresh de token e callbacks de erro/mudança de sessão.
+ *
  * @module @rainersoft/utils/hooks
- * @author Rainer Teixeira
- * @version 2.0.0
- * @since 1.0.0
+ * @autor Rainer Teixeira
+ * @versao 2.0.0
+ * @desde 1.0.0
  */
 
 import { useCallback, useEffect, useState, useRef } from 'react';
@@ -16,18 +16,29 @@ import { useCallback, useEffect, useState, useRef } from 'react';
 // TYPES & INTERFACES
 // ============================================================================
 
+/** Dados de perfil do usuário autenticado. */
 export interface UserProfile {
+  /** Identificador único do usuário. */
   id: string;
+  /** Apelido ou nome curto do usuário. */
   nickname: string;
+  /** E-mail do usuário. */
   email?: string;
+  /** Indica se o e-mail foi verificado. */
   emailVerified?: boolean;
+  /** Papel do usuário na aplicação. */
   role?: UserRole;
+  /** URL do avatar do usuário. */
   avatar?: string;
+  /** Data de criação do registro. */
   createdAt?: string;
+  /** Data da última atualização. */
   updatedAt?: string;
+  /** Data/hora do último login. */
   lastLoginAt?: string;
 }
 
+/** Papéis suportados para controle de autorização. */
 export enum UserRole {
   ADMIN = 'admin',
   MODERATOR = 'moderator',
@@ -35,12 +46,17 @@ export enum UserRole {
   GUEST = 'guest'
 }
 
+/** Credenciais utilizadas no login. */
 export interface LoginCredentials {
+  /** E-mail do usuário. */
   email: string;
+  /** Senha do usuário. */
   password: string;
+  /** Flag para manter sessão persistida. */
   rememberMe?: boolean;
 }
 
+/** Dados enviados para registro de novo usuário. */
 export interface RegisterData {
   nickname: string;
   email: string;
@@ -49,11 +65,15 @@ export interface RegisterData {
   role?: UserRole;
 }
 
+/** Opções para o fluxo de logout. */
 export interface LogoutOptions {
+  /** Invalida todas as sessões no backend. */
   invalidateAllSessions?: boolean;
+  /** Caminho para redirecionar após logout. */
   redirectPath?: string;
 }
 
+/** Resultado padrão retornado pelas operações de autenticação. */
 export interface AuthResult {
   success: boolean;
   user?: UserProfile;
@@ -62,13 +82,21 @@ export interface AuthResult {
   error?: string;
 }
 
+/** Configurações aceitas pelo hook {@link useAuth}. */
 export interface UseAuthConfig {
+  /** Habilita refresh automático do token. */
   autoRefresh?: boolean;
+  /** Intervalo do refresh automático em ms. */
   refreshInterval?: number;
+  /** Chave usada para salvar token no storage. */
   tokenStorageKey?: string;
+  /** Chave usada para salvar usuário no storage. */
   userStorageKey?: string;
+  /** Endpoint base da API de autenticação. */
   apiEndpoint?: string;
+  /** Callback disparada quando o usuário muda (login/logout). */
   onAuthChange?: (user: UserProfile | null) => void;
+  /** Callback disparada quando ocorre erro. */
   onError?: (error: string) => void;
 }
 
@@ -76,6 +104,7 @@ export interface UseAuthConfig {
 // DEFAULT CONFIGURATION
 // ============================================================================
 
+/** Configuração padrão aplicada quando não houver override. */
 const DEFAULT_CONFIG: Required<UseAuthConfig> = {
   autoRefresh: true,
   refreshInterval: 15 * 60 * 1000, // 15 minutes
@@ -90,6 +119,7 @@ const DEFAULT_CONFIG: Required<UseAuthConfig> = {
 // STORAGE UTILITIES
 // ============================================================================
 
+/** Utilitários de persistência para tokens e usuário. */
 class AuthStorage {
   private static isClient = typeof window !== 'undefined';
 
@@ -145,8 +175,9 @@ class AuthStorage {
 // TOKEN UTILITIES
 // ============================================================================
 
+/** Utilitários para decodificar e validar tokens JWT. */
 class TokenManager {
-  static decodeToken(token: string): any {
+  static decodeToken(token: string): { exp?: number; [key: string]: unknown } | null {
     try {
       const payload = token.split('.')[1];
       const decoded = atob(payload);
@@ -161,7 +192,7 @@ class TokenManager {
     if (!decoded) return true;
     
     const now = Date.now() / 1000;
-    return decoded.exp < now;
+    return (decoded.exp ?? 0) < now;
   }
 }
 
@@ -169,6 +200,10 @@ class TokenManager {
 // MAIN HOOK
 // ============================================================================
 
+/**
+ * Hook principal para autenticação: login, logout, registro, refresh e perfil.
+ * Retorna estados, erros e ações para gerenciar a sessão do usuário.
+ */
 export function useAuth(config: Partial<UseAuthConfig> = {}) {
   const configRef = useRef({ ...DEFAULT_CONFIG, ...config });
   const cfg = configRef.current;
@@ -204,10 +239,19 @@ export function useAuth(config: Partial<UseAuthConfig> = {}) {
   // API CALLS
   // ============================================================================
 
+  /** Resposta comum da API de autenticação. */
+  interface ApiResponse {
+    success?: boolean;
+    user?: UserProfile;
+    token?: string;
+    refreshToken?: string;
+    error?: string;
+  }
+
   const apiCall = useCallback(async (
     endpoint: string,
     options: RequestInit = {}
-  ): Promise<any> => {
+  ): Promise<ApiResponse> => {
     const token = getStoredToken();
     const url = `${cfg.apiEndpoint}${endpoint}`;
     
@@ -232,6 +276,7 @@ export function useAuth(config: Partial<UseAuthConfig> = {}) {
   // AUTH ACTIONS
   // ============================================================================
 
+  /** Realiza login com e-mail/senha e persiste tokens. */
   const login = useCallback(async (credentials: LoginCredentials): Promise<AuthResult> => {
     setLoading(true);
     setError(null);
@@ -268,6 +313,7 @@ export function useAuth(config: Partial<UseAuthConfig> = {}) {
     }
   }, [apiCall, setUser, storeToken, cfg]);
 
+  /** Encerra sessão local e, opcionalmente, invalida sessões remotas. */
   const logout = useCallback(async (options: LogoutOptions = {}): Promise<void> => {
     try {
       if (options.invalidateAllSessions) {
@@ -291,6 +337,7 @@ export function useAuth(config: Partial<UseAuthConfig> = {}) {
     }
   }, [apiCall, clearTokens, cfg]);
 
+  /** Registra novo usuário e inicia sessão. */
   const register = useCallback(async (userData: RegisterData): Promise<AuthResult> => {
     setLoading(true);
     setError(null);
@@ -327,6 +374,7 @@ export function useAuth(config: Partial<UseAuthConfig> = {}) {
     }
   }, [apiCall, setUser, storeToken, cfg]);
 
+  /** Atualiza dados do perfil do usuário autenticado. */
   const updateProfile = useCallback(async (data: Partial<UserProfile>): Promise<AuthResult> => {
     if (!user) {
       const error = 'No user logged in';
@@ -368,6 +416,7 @@ export function useAuth(config: Partial<UseAuthConfig> = {}) {
     }
   }, [apiCall, user, setUser, cfg]);
 
+  /** Solicita novo access token usando refresh token salvo. */
   const refreshToken = useCallback(async (): Promise<AuthResult> => {
     const refreshToken = AuthStorage.getItem(`${cfg.tokenStorageKey}_refresh`);
     if (!refreshToken) {
@@ -452,21 +501,25 @@ export function useAuth(config: Partial<UseAuthConfig> = {}) {
 // UTILITY HOOKS
 // ============================================================================
 
+/** Retorna apenas o booleano de autenticação. */
 export function useIsAuthenticated(): boolean {
   const { isAuthenticated } = useAuth();
   return isAuthenticated;
 }
 
+/** Retorna o usuário atual ou null. */
 export function useCurrentUser(): UserProfile | null {
   const { user } = useAuth();
   return user;
 }
 
+/** Verifica se o usuário atual possui o papel informado. */
 export function useHasRole(role: UserRole): boolean {
   const { user } = useAuth();
   return user?.role === role;
 }
 
+/** Atalho para verificar se o usuário é administrador. */
 export function useIsAdmin(): boolean {
   return useHasRole(UserRole.ADMIN);
 }

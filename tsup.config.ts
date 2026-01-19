@@ -9,6 +9,7 @@ export default defineConfig({
     'status/index': 'src/status/index.ts',
     'auth/index': 'src/authentication/index.ts',
     'search/index': 'src/search/index.ts',
+    'hooks/index': 'src/hooks/index.ts',
   },
   format: ['cjs', 'esm'],
   dts: true,

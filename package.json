@@ -1,6 +1,6 @@
 {
   "name": "@rainersoft/utils",
-  "version": "1.4.0",
+  "version": "3.0.0",
   "description": "Utilitários universais para formatação, conversão e manipulação de dados",
   "packageManager": "pnpm@10.28.0",
   "author": {
@@ -28,6 +28,36 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs",
       "require": "./dist/index.js"
+    },
+    "./hooks": {
+      "types": "./dist/hooks/index.d.ts",
+      "import": "./dist/hooks/index.mjs",
+      "require": "./dist/hooks/index.js"
+    },
+    "./hooks/useAuth": {
+      "types": "./dist/hooks/useAuth.d.ts",
+      "import": "./dist/hooks/useAuth.mjs",
+      "require": "./dist/hooks/useAuth.js"
+    },
+    "./hooks/use-password-strength": {
+      "types": "./dist/hooks/use-password-strength.d.ts",
+      "import": "./dist/hooks/use-password-strength.mjs",
+      "require": "./dist/hooks/use-password-strength.js"
+    },
+    "./hooks/use-smooth-scroll": {
+      "types": "./dist/hooks/use-smooth-scroll.d.ts",
+      "import": "./dist/hooks/use-smooth-scroll.mjs",
+      "require": "./dist/hooks/use-smooth-scroll.js"
+    },
+    "./hooks/use-scroll-position": {
+      "types": "./dist/hooks/use-scroll-position.d.ts",
+      "import": "./dist/hooks/use-scroll-position.mjs",
+      "require": "./dist/hooks/use-scroll-position.js"
+    },
+    "./hooks/use-mobile": {
+      "types": "./dist/hooks/use-mobile.d.ts",
+      "import": "./dist/hooks/use-mobile.mjs",
+      "require": "./dist/hooks/use-mobile.js"
     },
     "./date": {
       "types": "./dist/date/index.d.ts",

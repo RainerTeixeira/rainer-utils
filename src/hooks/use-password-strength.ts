@@ -1,46 +1,55 @@
-/**
- * Hook para avaliar e monitorar força de senha
- * 
- * @param {string} password - Senha a ser avaliada
- * @param {Object} options - Opções de configuração
- * @param {number} options.minLength - Comprimento mínimo (default: 8)
- * @param {boolean} options.requireUppercase - Exige letra maiúscula (default: true)
- * @param {boolean} options.requireLowercase - Exige letra minúscula (default: true)
- * @param {boolean} options.requireNumbers - Exige números (default: true)
- * @param {boolean} options.requireSpecialChars - Exige caracteres especiais (default: true)
- * @param {string[]} options.customPatterns - Padrões personalizados para validação
- * @param {Object} options.labels - Rótulos customizados (para i18n)
- * 
- * @returns {Object} Objeto com força da senha e validações
- */
-
 import React from 'react';
 
+/**
+ * Rótulos customizados para internacionalização do feedback de senha.
+ */
+interface StrengthLabels {
+  veryWeak?: string;
+  weak?: string;
+  fair?: string;
+  good?: string;
+  strong?: string;
+  enterPassword?: string;
+  useMinLength?: string;
+  addUppercase?: string;
+  addLowercase?: string;
+  addNumbers?: string;
+  addSpecialChars?: string;
+  avoidRepeating?: string;
+  avoidCommon?: string;
+}
+
+/**
+ * Opções de configuração para o hook {@link usePasswordStrength}.
+ */
+interface PasswordStrengthOptions {
+  /** Comprimento mínimo exigido (padrão: 8). */
+  minLength?: number;
+  /** Se deve exigir letra maiúscula. */
+  requireUppercase?: boolean;
+  /** Se deve exigir letra minúscula. */
+  requireLowercase?: boolean;
+  /** Se deve exigir números. */
+  requireNumbers?: boolean;
+  /** Se deve exigir caracteres especiais. */
+  requireSpecialChars?: boolean;
+  /** Padrões regex adicionais para pontuação. */
+  customPatterns?: string[];
+  /** Rótulos customizados para mensagens e dicas. */
+  labels?: StrengthLabels;
+}
+
+/**
+ * Hook para avaliar e monitorar a força de uma senha com feedback detalhado.
+ * Retorna pontuação, nível, validações, sugestões e utilitário para gerar senha forte.
+ *
+ * @param password Senha a ser avaliada.
+ * @param options Opções de validação e rótulos.
+ * @returns Objeto com métricas, validações, sugestões e helper para gerar senhas.
+ */
 export function usePasswordStrength(
   password: string, 
-  options: {
-    minLength?: number;
-    requireUppercase?: boolean;
-    requireLowercase?: boolean;
-    requireNumbers?: boolean;
-    requireSpecialChars?: boolean;
-    customPatterns?: string[];
-    labels?: {
-      veryWeak?: string;
-      weak?: string;
-      fair?: string;
-      good?: string;
-      strong?: string;
-      enterPassword?: string;
-      useMinLength?: string;
-      addUppercase?: string;
-      addLowercase?: string;
-      addNumbers?: string;
-      addSpecialChars?: string;
-      avoidRepeating?: string;
-      avoidCommon?: string;
-    };
-  } = {}
+  options: PasswordStrengthOptions = {}
 ) {
   const {
     minLength = 8,
@@ -134,12 +143,12 @@ export function usePasswordStrength(
   // Obter cor para indicador visual
   const color = React.useMemo(() => {
     switch (level) {
-      case 'very-weak': return '#ef4444'; // red-500
+      case 'very-weak': return 'var(--color-red-500)'; // red-500
       case 'weak': return '#f97316'; // orange-500
       case 'fair': return '#eab308'; // yellow-500
-      case 'good': return '#22c55e'; // green-500
+      case 'good': return 'var(--color-green-500)'; // green-500
       case 'strong': return '#059669'; // emerald-600
-      default: return '#6b7280'; // gray-500
+      default: return 'var(--color-gray-500)'; // gray-500
     }
   }, [level]);
 

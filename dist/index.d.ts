@@ -1,5 +1,6 @@
 import { L as Locale } from './types-tUMATEGI.js';
 export { C as CURRENCY_MAP, D as DEFAULT_LOCALE, a as LocaleConfig } from './types-tUMATEGI.js';
+import { ClassValue } from 'clsx';
 import { d as dateModule } from './index-BA11MtKk.js';
 export { f as formatDate, a as formatDateTime, b as formatRelativeDate, i as isValidDate, t as toISOString } from './index-BA11MtKk.js';
 import { s as statusModule } from './index-BfZE8XjJ.js';
@@ -7,23 +8,32 @@ export { G as GenericStatus, g as getStatusColor, a as getStatusVariant, b as tr
 import { a as authModule } from './index-DeZ9ZulO.js';
 export { b as getRefreshToken, g as getToken, d as getTokens, h as hasToken, r as removeToken, c as setRefreshToken, s as setToken, e as setTokens } from './index-DeZ9ZulO.js';
 export { SearchOptions, fuzzySearch, searchContent, searchWithScore } from './search/index.js';
+export { AuthResult, CounterOptions, LoginCredentials, LogoutOptions, RegisterData, StorageConfig, ToggleStateOptions, UseAuthConfig, UserProfile, UserRole, useAuth, useCounter, useCurrentUser, useHasRole, useIntersectionObserver, useIsAdmin, useIsAuthenticated, useIsMobile, usePasswordStrength, useScrollPosition, useSmoothScroll, useToggleState } from './hooks/index.js';
 export { formatCNPJ, formatCPF, formatPhone, getInitials, isCNPJ, isCPF, textToSlug, truncate } from './string/index.js';
 export { formatCurrency } from './number/index.js';
+
+declare function cn(...inputs: ClassValue[]): string;
 
 declare function hexToRgb(hex: string): {
     r: number;
     g: number;
     b: number;
 };
-declare function validateContrast(foreground: string, background: string, options?: {
-    requireAAA?: boolean;
-    largeText?: boolean;
-}): {
-    valid: boolean;
-    level: string;
-    contrast: number;
-    message: string;
+declare function rgbToHex(r: number, g: number, b: number): string;
+declare function hexToHsl(hex: string): {
+    h: number;
+    s: number;
+    l: number;
 };
+declare function hslToHex(h: number, s: number, l: number): string;
+declare function adjustBrightness(hex: string, amount: number): string;
+declare function adjustSaturation(hex: string, amount: number): string;
+declare function adjustHue(hex: string, degrees: number): string;
+declare function lighten(hex: string, amount: number): string;
+declare function darken(hex: string, amount: number): string;
+declare function hexToRgba(hex: string, alpha: number): string;
+declare function getComplementary(hex: string): string;
+declare function getAnalogousPalette(hex: string, count?: number): string[];
 
 interface ValidationResult {
     isValid: boolean;
@@ -58,47 +68,6 @@ declare function validateMessage(message: string, options?: {
     maxLength?: number;
 }, locale?: Locale): ValidationResult;
 
-interface TiptapNode {
-    type: string;
-    text?: string;
-    content?: TiptapNode[];
-    attrs?: Record<string, any>;
-}
-interface TiptapJSON {
-    type: 'doc';
-    content: TiptapNode[];
-}
-interface ContentStats {
-    wordCount: number;
-    characterCount: number;
-    readingTime: number;
-}
-declare function extractTextFromTiptap(content: TiptapJSON): string;
-declare function generateExcerpt(content: TiptapJSON, maxLength?: number): string;
-declare function createEmptyTiptapContent(): TiptapJSON;
-declare function isContentEmpty(content: TiptapJSON): boolean;
-declare function countCharacters(content: TiptapJSON): number;
-declare function getReadingTime(content: TiptapJSON, wordsPerMinute?: number): number;
-declare function getContentStats(content: TiptapJSON): ContentStats;
-declare function containsText(content: TiptapJSON, searchText: string): boolean;
-declare function replaceText(content: TiptapJSON, searchText: string, replaceText: string): TiptapJSON;
-
-declare function rgbToHex(r: number, g: number, b: number): string;
-declare function hexToHsl(hex: string): {
-    h: number;
-    s: number;
-    l: number;
-};
-declare function hslToHex(h: number, s: number, l: number): string;
-declare function adjustBrightness(hex: string, amount: number): string;
-declare function adjustSaturation(hex: string, amount: number): string;
-declare function adjustHue(hex: string, degrees: number): string;
-declare function lighten(hex: string, amount: number): string;
-declare function darken(hex: string, amount: number): string;
-declare function hexToRgba(hex: string, alpha: number): string;
-declare function getComplementary(hex: string): string;
-declare function getAnalogousPalette(hex: string, count?: number): string[];
-
 declare function prefersReducedMotion(): boolean;
 declare function onReducedMotionChange(callback: (prefersReduced: boolean) => void): () => void;
 declare function scrollToPosition(x?: number, y?: number, options?: {
@@ -123,72 +92,6 @@ declare function onDarkModeChange(callback: (isDark: boolean) => void): () => vo
 declare function copyToClipboard(text: string): Promise<boolean>;
 declare function downloadFile(blob: Blob, filename: string): void;
 
-interface UserProfile {
-    id: string;
-    nickname: string;
-    email?: string;
-    emailVerified?: boolean;
-    role?: UserRole;
-    avatar?: string;
-    createdAt?: string;
-    updatedAt?: string;
-    lastLoginAt?: string;
-}
-declare enum UserRole {
-    ADMIN = "admin",
-    MODERATOR = "moderator",
-    USER = "user",
-    GUEST = "guest"
-}
-interface LoginCredentials {
-    email: string;
-    password: string;
-    rememberMe?: boolean;
-}
-interface RegisterData {
-    nickname: string;
-    email: string;
-    password: string;
-    confirmPassword: string;
-    role?: UserRole;
-}
-interface LogoutOptions {
-    invalidateAllSessions?: boolean;
-    redirectPath?: string;
-}
-interface AuthResult {
-    success: boolean;
-    user?: UserProfile;
-    token?: string;
-    refreshToken?: string;
-    error?: string;
-}
-interface UseAuthConfig {
-    autoRefresh?: boolean;
-    refreshInterval?: number;
-    tokenStorageKey?: string;
-    userStorageKey?: string;
-    apiEndpoint?: string;
-    onAuthChange?: (user: UserProfile | null) => void;
-    onError?: (error: string) => void;
-}
-declare function useAuth(config?: Partial<UseAuthConfig>): {
-    user: UserProfile | null;
-    loading: boolean;
-    error: string | null;
-    isAuthenticated: boolean;
-    login: (credentials: LoginCredentials) => Promise<AuthResult>;
-    logout: (options?: LogoutOptions) => Promise<void>;
-    register: (userData: RegisterData) => Promise<AuthResult>;
-    updateProfile: (data: Partial<UserProfile>) => Promise<AuthResult>;
-    refreshToken: () => Promise<AuthResult>;
-    resetError: () => void;
-};
-declare function useIsAuthenticated(): boolean;
-declare function useCurrentUser(): UserProfile | null;
-declare function useHasRole(role: UserRole): boolean;
-declare function useIsAdmin(): boolean;
-
 declare function formatNumber$1(num: number): string;
 declare function calculateChange(current: number, previous: number): number;
 declare function formatPercentage(value: number, options?: {
@@ -203,51 +106,67 @@ declare function findMinMax<T extends Record<string, any>>(data: T[], field: key
     max: number;
 };
 
-declare function usePasswordStrength(password: string, options?: {
-    minLength?: number;
-    requireUppercase?: boolean;
-    requireLowercase?: boolean;
-    requireNumbers?: boolean;
-    requireSpecialChars?: boolean;
-    customPatterns?: string[];
-    labels?: {
-        veryWeak?: string;
-        weak?: string;
-        fair?: string;
-        good?: string;
-        strong?: string;
-        enterPassword?: string;
-        useMinLength?: string;
-        addUppercase?: string;
-        addLowercase?: string;
-        addNumbers?: string;
-        addSpecialChars?: string;
-        avoidRepeating?: string;
-        avoidCommon?: string;
-    };
-}): {
-    strength: number;
-    level: string;
-    color: string;
-    label: string;
-    isValid: boolean;
-    validations: {
-        hasMinLength: boolean;
-        hasUppercase: boolean;
-        hasLowercase: boolean;
-        hasNumbers: boolean;
-        hasSpecialChars: boolean;
-        noRepeatingChars: boolean;
-        noCommonPatterns: boolean;
-    };
-    suggestions: string[];
-    generateStrongPassword: (length?: number) => string;
-    isVeryWeak: boolean;
-    isWeak: boolean;
-    isFair: boolean;
-    isGood: boolean;
-    isStrong: boolean;
-};
+declare function isAcceptedFormat(mimeType: string): boolean;
+declare function isWebP(mimeType: string): boolean;
+declare function supportsWebP(): Promise<boolean>;
+declare function getImageInfo(file: File): Promise<{
+    width: number;
+    height: number;
+    size: number;
+    type: string;
+}>;
+declare function resizeImage(file: File, maxWidth: number, maxHeight: number, quality?: number, format?: 'image/jpeg' | 'image/png' | 'image/webp'): Promise<File>;
+declare function convertToWebP(file: File, quality?: number): Promise<File>;
+declare function prepareImageForUpload(file: File, options?: {
+    maxWidth?: number;
+    maxHeight?: number;
+    quality?: number;
+    shouldConvertToWebP?: boolean;
+    maxSizeBytes?: number;
+}): Promise<File>;
+declare function generatePlaceholder(width: number, height: number, text?: string): string;
+
+declare const COOKIE_CONSENT_KEY = "cookie-consent";
+declare const COOKIE_PREFERENCES_KEY = "cookie-preferences";
+declare const COOKIE_VERSION = "1.0.0";
+interface CookiePreferences {
+    essential: boolean;
+    performance: boolean;
+    functionality: boolean;
+    analytics: boolean;
+}
+interface CookieConsent {
+    version: string;
+    consented: boolean;
+    timestamp: number;
+    preferences: CookiePreferences;
+}
+declare class CookieManager {
+    private static instance;
+    private constructor();
+    static getInstance(): CookieManager;
+    hasConsent(): boolean;
+    getPreferences(): CookiePreferences | null;
+    saveConsent(preferences: CookiePreferences): void;
+    updatePreferences(preferences: CookiePreferences): void;
+    revokeConsent(): void;
+    isAllowed(type: keyof CookiePreferences): boolean;
+    private loadScripts;
+    private loadGoogleAnalytics;
+    private unloadGoogleAnalytics;
+    private clearAnalyticsCookies;
+}
+declare function getCookieManager(): CookieManager;
+declare function hasCookieConsent(): boolean;
+declare function getCookiePreferences(): CookiePreferences | null;
+declare function saveCookieConsent(preferences: CookiePreferences): void;
+declare function isCookieAllowed(type: keyof CookiePreferences): boolean;
+declare global {
+    interface Window {
+        gtag?: (...args: unknown[]) => void;
+        dataLayer?: unknown[];
+    }
+}
 
 declare function formatDate(date: string | Date, format?: 'short' | 'long' | 'full'): string;
 declare function formatDateTime(date: string | Date): string;
@@ -318,4 +237,4 @@ declare const datetime: typeof dateModule;
 declare const authentication: typeof authModule;
 declare const stateManagement: typeof statusModule;
 
-export { type ContentStats, Locale, type TiptapJSON, type TiptapNode, type ValidationResult, adjustBrightness, adjustHue, adjustSaturation, authentication, calculateChange, calculateMovingAverage, calculateReadingTime, capitalize, cleanText, containsText, copyToClipboard, countCharacters, countWords, createEmptyTiptapContent, darken, datetime, downloadFile, extractInitials, extractTextFromTiptap, findMinMax, formatNumber$1 as formatNumber, formatPercentage, generateAvatarUrl, generateDynamicAvatarUrl, generateExcerpt, generateMockChartData, generateUniqueId, getAnalogousPalette, getAvatarColorFromName, getComplementary, getContentStats, getElementPosition, getReadingTime, groupDataByPeriod, hexToHsl, hexToRgb, hexToRgba, hslToHex, isContentEmpty, isDarkMode, isElementVisible, isEmpty, isMobile, isValidAvatarUrl, lighten, normalizeSpaces, onDarkModeChange, onReducedMotionChange, prefersReducedMotion, ptBr as ptBR, replaceText, rgbToHex, scrollToElement, scrollToPosition, scrollToTop, smoothScrollTo, stateManagement, textProcessing, truncateText, useAuth, useCurrentUser, useHasRole, useIsAdmin, useIsAuthenticated, usePasswordStrength, validateContrast, validateEmail, validateMessage, validatePassword, validatePhone, validateSlug, validateText, validateUrl, validateUsername };
+export { COOKIE_CONSENT_KEY, COOKIE_PREFERENCES_KEY, COOKIE_VERSION, type CookieConsent, CookieManager, type CookiePreferences, Locale, type ValidationResult, adjustBrightness, adjustHue, adjustSaturation, authentication, calculateChange, calculateMovingAverage, calculateReadingTime, capitalize, cleanText, cn, convertToWebP, copyToClipboard, countWords, darken, datetime, downloadFile, extractInitials, findMinMax, formatNumber$1 as formatNumber, formatPercentage, generateAvatarUrl, generateDynamicAvatarUrl, generateMockChartData, generatePlaceholder, generateUniqueId, getAnalogousPalette, getAvatarColorFromName, getComplementary, getCookieManager, getCookiePreferences, getElementPosition, getImageInfo, groupDataByPeriod, hasCookieConsent, hexToHsl, hexToRgb, hexToRgba, hslToHex, isAcceptedFormat, isCookieAllowed, isDarkMode, isElementVisible, isEmpty, isMobile, isValidAvatarUrl, isWebP, lighten, normalizeSpaces, onDarkModeChange, onReducedMotionChange, prefersReducedMotion, prepareImageForUpload, ptBr as ptBR, resizeImage, rgbToHex, saveCookieConsent, scrollToElement, scrollToPosition, scrollToTop, smoothScrollTo, stateManagement, supportsWebP, textProcessing, truncateText, validateEmail, validateMessage, validatePassword, validatePhone, validateSlug, validateText, validateUrl, validateUsername };
