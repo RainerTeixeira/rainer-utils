@@ -13,6 +13,10 @@
 // Exportações principais
 export * from './types';
 export * from './utils';
+export * from './error';
+
+// Exportação compatível para validateEmail
+export { validateEmailSimple as validateEmail } from './error';
 
 // Exportações específicas para evitar conflitos de nomes
 export { hexToRgb } from './color';
