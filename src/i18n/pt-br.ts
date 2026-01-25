@@ -17,17 +17,17 @@ import {
   formatDate as formatDateBase,
   formatDateTime as formatDateTimeBase,
   formatRelativeDate as formatRelativeDateBase,
-} from './date';
+} from '../date';
 
 import {
   formatCurrency as formatCurrencyBase,
   formatNumber as formatNumberBase,
   formatCompact as formatCompactBase,
-} from './number';
+} from '../number';
 
 import {
   translateStatus as translateStatusBase,
-} from './status';
+} from '../status';
 
 /**
  * Formata uma data em português brasileiro (pt-BR)

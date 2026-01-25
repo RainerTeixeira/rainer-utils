@@ -12,7 +12,6 @@
 
 // Exportações principais
 export * from './types';
-export * from './utils';
 export * from './error';
 
 // Exportação compatível para validateEmail
@@ -33,6 +32,14 @@ export * from './search';
 export * from './image';
 export * from './cookie';
 export * from './hooks'; // ✅ NOVO: Hooks migrados
+export * from './crypto'; // ✅ NOVO: Crypto utilities
+export * from './storage'; // ✅ NOVO: Storage utilities
+export * from './i18n'; // ✅ NOVO: Internationalization
+
+// Formatting utilities (BR) - apenas máscaras brasileiras
+export { 
+  formatCEP
+} from './formatting';
 
 // ============================================================================
 // STRING UTILITIES (sem conflitos)
@@ -53,32 +60,15 @@ export { formatCurrency } from './number';
 // export type { TiptapNode, TiptapJSON, ContentStats } from './content';
 
 // Helpers pt-BR
-export * as ptBR from './pt-br';
-
-// Exportações de texto (text utilities)
-export {
-  extractInitials,
-  generateAvatarUrl,
-  isValidAvatarUrl,
-  getAvatarColorFromName,
-  generateDynamicAvatarUrl,
-  generateUniqueId,
-  truncateText,
-  capitalize,
-  cleanText,
-  countWords,
-  isEmpty,
-  normalizeSpaces,
-  calculateReadingTime
-} from './text';
+export * as ptBR from './i18n/pt-br';
 
 // Aliases descritivos
-import * as textModule from './text';
+import * as stringModule from './string';
 import * as dateModule from './date';
 import * as authModule from './authentication';
 import * as statusModule from './status';
 
-export const textProcessing = textModule;
+export const textProcessing = stringModule;
 export const datetime = dateModule;
 export const authentication = authModule;
 export const stateManagement = statusModule;

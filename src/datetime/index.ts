@@ -11,3 +11,6 @@
 
 // Re-export tudo de date/
 export * from '../date';
+
+// Export helpers adicionais
+export * from './helpers';

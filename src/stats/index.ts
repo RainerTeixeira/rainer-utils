@@ -9,19 +9,19 @@
  */
 
 /**
- * Formata número grande com abreviação (1.5k, 2.3M, etc)
+ * Formata número grande com abreviação compacta (1.5k, 2.3M, etc)
  *
  * @param num - Número para formatar
  * @returns String formatada com abreviação
  *
  * @example
  * ```ts
- * formatNumber(1500) // '1.5k'
- * formatNumber(2500000) // '2.5M'
- * formatNumber(999) // '999'
+ * formatCompactNumber(1500) // '1.5k'
+ * formatCompactNumber(2500000) // '2.5M'
+ * formatCompactNumber(999) // '999'
  * ```
  */
-export function formatNumber(num: number): string {
+export function formatCompactNumber(num: number): string {
   if (num >= 1000000) {
     return (num / 1000000).toFixed(1) + 'M';
   }

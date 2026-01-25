@@ -118,23 +118,49 @@ export function wordCount(text: string): number {
 }
 
 /**
- * Formata um número de telefone brasileiro
+ * Formata um número de telefone com suporte multi-país
  * 
  * @param phone - Número de telefone (com ou sem formatação)
+ * @param locale - Locale para formatação (padrão: 'pt-BR')
  * @returns Telefone formatado
  * 
  * @example
- * formatPhone('11999998888') // '(11) 99999-8888'
- * formatPhone('1133334444') // '(11) 3333-4444'
+ * formatPhone('11999998888') // '(11) 99999-8888' (pt-BR)
+ * formatPhone('1133334444') // '(11) 3333-4444' (pt-BR)
+ * formatPhone('2025551234', 'en-US') // '(202) 555-1234'
+ * formatPhone('912345678', 'es-ES') // '+34 912 34 56 78'
  */
-export function formatPhone(phone: string): string {
+export function formatPhone(phone: string, locale: 'pt-BR' | 'en-US' | 'es-ES' = 'pt-BR'): string {
   const digits = phone.replace(/\D/g, '');
   
-  if (digits.length === 11) {
-    return digits.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+  switch (locale) {
+    case 'pt-BR':
+      // Brasil: (11) 99999-8888 ou (11) 3333-4444
+      if (digits.length === 11) {
+        return digits.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+      }
+      return digits.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
+      
+    case 'en-US':
+      // EUA: (202) 555-1234
+      if (digits.length === 10) {
+        return digits.replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');
+      }
+      if (digits.length === 11 && digits.startsWith('1')) {
+        return digits.replace(/(\d{1})(\d{3})(\d{3})(\d{4})/, '+$1 ($2) $3-$4');
+      }
+      return digits;
+      
+    case 'es-ES':
+      // Espanha: +34 912 34 56 78
+      if (digits.length === 9) {
+        return digits.replace(/(\d{3})(\d{2})(\d{2})(\d{2})/, '+34 $1 $2 $3 $4');
+      }
+      return digits;
+      
+    default:
+      return digits;
   }
-  
-  return digits.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
 }
 
 /**

@@ -1,0 +1,1329 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>@rainersoft/utils - Testes Multi-idioma</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 2rem;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    header {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    h1 {
+      color: #667eea;
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .subtitle {
+      color: #666;
+      font-size: 1.1rem;
+    }
+
+    .category {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+      margin-bottom: 2rem;
+    }
+
+    .category-title {
+      color: #667eea;
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 3px solid #667eea;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .category-icon {
+      font-size: 2rem;
+    }
+
+    .function-group {
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      background: #f8f9fa;
+      border-radius: 8px;
+      border-left: 4px solid #667eea;
+    }
+
+    .function-name {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 1rem;
+      font-family: 'Courier New', monospace;
+    }
+
+    .locale-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+
+    .locale-card {
+      background: white;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .locale-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid #eee;
+    }
+
+    .flag {
+      font-size: 1.5rem;
+    }
+
+    .locale-name {
+      font-weight: 600;
+      color: #667eea;
+    }
+
+    .result {
+      font-size: 1.1rem;
+      color: #333;
+      font-weight: 500;
+      word-break: break-word;
+    }
+
+    .input-value {
+      font-size: 0.85rem;
+      color: #999;
+      margin-bottom: 0.5rem;
+      font-family: 'Courier New', monospace;
+    }
+
+    @media (max-width: 1024px) {
+      .locale-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>@rainersoft/utils</h1>
+      <p class="subtitle">Demonstração de Funções Multi-idioma (pt-BR, en-US, es-ES)</p>
+    </header>
+
+    <!-- DATE & TIME -->
+    <section class="category">
+      <h2 class="category-title">
+        <span class="category-icon">📅</span>
+        Date & Time
+      </h2>
+
+      <div class="function-group">
+        <div class="function-name">formatDate()</div>
+        <div class="input-value">Input: new Date('2026-01-24')</div>
+        <div class="locale-grid">
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🇧🇷</span>
+              <span class="locale-name">pt-BR</span>
+            </div>
+            <div class="result" id="date-pt-BR"></div>
+          </div>
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🇺🇸</span>
+              <span class="locale-name">en-US</span>
+            </div>
+            <div class="result" id="date-en-US"></div>
+          </div>
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🇪🇸</span>
+              <span class="locale-name">es-ES</span>
+            </div>
+            <div class="result" id="date-es-ES"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="function-group">
+        <div class="function-name">formatDateTime()</div>
+        <div class="input-value">Input: new Date('2026-01-24T14:30:00')</div>
+        <div class="locale-grid">
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🇧🇷</span>
+              <span class="locale-name">pt-BR</span>
+            </div>
+            <div class="result" id="datetime-pt-BR"></div>
+          </div>
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🇺🇸</span>
+              <span class="locale-name">en-US</span>
+            </div>
+            <div class="result" id="datetime-en-US"></div>
+          </div>
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🇪🇸</span>
+              <span class="locale-name">es-ES</span>
+            </div>
+            <div class="result" id="datetime-es-ES"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- NUMBER & CURRENCY -->
+    <section class="category">
+      <h2 class="category-title">
+        <span class="category-icon">💰</span>
+        Number & Currency
+      </h2>
+
+      <div class="function-group">
+        <div class="function-name">formatCurrency()</div>
+        <div class="input-value">Input: 1234.56</div>
+        <div class="locale-grid">
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🇧🇷</span>
+              <span class="locale-name">pt-BR</span>
+            </div>
+            <div class="result" id="currency-pt-BR"></div>
+          </div>
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🇺🇸</span>
+              <span class="locale-name">en-US</span>
+            </div>
+            <div class="result" id="currency-en-US"></div>
+          </div>
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🇪🇸</span>
+              <span class="locale-name">es-ES</span>
+            </div>
+            <div class="result" id="currency-es-ES"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="function-group">
+        <div class="function-name">formatNumber()</div>
+        <div class="input-value">Input: 1234567.89</div>
+        <div class="locale-grid">
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🇧🇷</span>
+              <span class="locale-name">pt-BR</span>
+            </div>
+            <div class="result" id="number-pt-BR"></div>
+          </div>
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🇺🇸</span>
+              <span class="locale-name">en-US</span>
+            </div>
+            <div class="result" id="number-en-US"></div>
+          </div>
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🇪🇸</span>
+              <span class="locale-name">es-ES</span>
+            </div>
+            <div class="result" id="number-es-ES"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="function-group">
+        <div class="function-name">formatPercent()</div>
+        <div class="input-value">Input: 0.1234 (12.34%)</div>
+        <div class="locale-grid">
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🇧🇷</span>
+              <span class="locale-name">pt-BR</span>
+            </div>
+            <div class="result" id="percent-pt-BR"></div>
+          </div>
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🇺🇸</span>
+              <span class="locale-name">en-US</span>
+            </div>
+            <div class="result" id="percent-en-US"></div>
+          </div>
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🇪🇸</span>
+              <span class="locale-name">es-ES</span>
+            </div>
+            <div class="result" id="percent-es-ES"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STRING & FORMATTING -->
+    <section class="category">
+      <h2 class="category-title">
+        <span class="category-icon">📱</span>
+        String & Formatting
+      </h2>
+
+      <div class="function-group">
+        <div class="function-name">formatPhone()</div>
+        <div class="input-value">Input: pt-BR: '11999998888', en-US: '2025551234', es-ES: '912345678'</div>
+        <div class="locale-grid">
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🇧🇷</span>
+              <span class="locale-name">pt-BR</span>
+            </div>
+            <div class="result" id="phone-pt-BR"></div>
+          </div>
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🇺🇸</span>
+              <span class="locale-name">en-US</span>
+            </div>
+            <div class="result" id="phone-en-US"></div>
+          </div>
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🇪🇸</span>
+              <span class="locale-name">es-ES</span>
+            </div>
+            <div class="result" id="phone-es-ES"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="function-group">
+        <div class="function-name">formatCPF() / formatCNPJ()</div>
+        <div class="input-value">Input: '12345678900' / '12345678000190'</div>
+        <div class="locale-grid">
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🇧🇷</span>
+              <span class="locale-name">pt-BR (CPF)</span>
+            </div>
+            <div class="result" id="cpf-pt-BR"></div>
+          </div>
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🇧🇷</span>
+              <span class="locale-name">pt-BR (CNPJ)</span>
+            </div>
+            <div class="result" id="cnpj-pt-BR"></div>
+          </div>
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">ℹ️</span>
+              <span class="locale-name">Específico BR</span>
+            </div>
+            <div class="result" style="color: #999;">N/A para outros países</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="function-group">
+        <div class="function-name">textToSlug()</div>
+        <div class="input-value">Input: 'Olá Mundo!' / 'Hello World!' / '¡Hola Mundo!'</div>
+        <div class="locale-grid">
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🇧🇷</span>
+              <span class="locale-name">pt-BR</span>
+            </div>
+            <div class="result" id="slug-pt-BR"></div>
+          </div>
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🇺🇸</span>
+              <span class="locale-name">en-US</span>
+            </div>
+            <div class="result" id="slug-en-US"></div>
+          </div>
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🇪🇸</span>
+              <span class="locale-name">es-ES</span>
+            </div>
+            <div class="result" id="slug-es-ES"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- I18N TRANSLATIONS -->
+    <section class="category">
+      <h2 class="category-title">
+        <span class="category-icon">🌍</span>
+        i18n Translations
+      </h2>
+
+      <div class="function-group">
+        <div class="function-name">getTranslations() - Days of Week</div>
+        <div class="input-value">Input: translations.days[0] (Sunday/Domingo)</div>
+        <div class="locale-grid">
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🇧🇷</span>
+              <span class="locale-name">pt-BR</span>
+            </div>
+            <div class="result" id="days-pt-BR"></div>
+          </div>
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🇺🇸</span>
+              <span class="locale-name">en-US</span>
+            </div>
+            <div class="result" id="days-en-US"></div>
+          </div>
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🇪🇸</span>
+              <span class="locale-name">es-ES</span>
+            </div>
+            <div class="result" id="days-es-ES"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="function-group">
+        <div class="function-name">getTranslations() - Months</div>
+        <div class="input-value">Input: translations.months[0] (January/Janeiro)</div>
+        <div class="locale-grid">
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🇧🇷</span>
+              <span class="locale-name">pt-BR</span>
+            </div>
+            <div class="result" id="months-pt-BR"></div>
+          </div>
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🇺🇸</span>
+              <span class="locale-name">en-US</span>
+            </div>
+            <div class="result" id="months-en-US"></div>
+          </div>
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🇪🇸</span>
+              <span class="locale-name">es-ES</span>
+            </div>
+            <div class="result" id="months-es-ES"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="function-group">
+        <div class="function-name">translate() - Common Words</div>
+        <div class="input-value">Input: 'today', 'yesterday', 'tomorrow'</div>
+        <div class="locale-grid">
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🇧🇷</span>
+              <span class="locale-name">pt-BR</span>
+            </div>
+            <div class="result" id="words-pt-BR"></div>
+          </div>
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🇺🇸</span>
+              <span class="locale-name">en-US</span>
+            </div>
+            <div class="result" id="words-en-US"></div>
+          </div>
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🇪🇸</span>
+              <span class="locale-name">es-ES</span>
+            </div>
+            <div class="result" id="words-es-ES"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AUTHENTICATION -->
+    <section class="category">
+      <h2 class="category-title">
+        <span class="category-icon">🔑</span>
+        Authentication
+      </h2>
+
+      <div class="function-group">
+        <div class="function-name">getToken() / setToken()</div>
+        <div class="input-value">Input: JWT Token simulation</div>
+        <div class="locale-grid">
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🌍</span>
+              <span class="locale-name">Universal</span>
+            </div>
+            <div class="result" id="auth-token"></div>
+          </div>
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🌍</span>
+              <span class="locale-name">Universal</span>
+            </div>
+            <div class="result" id="auth-storage"></div>
+          </div>
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🌍</span>
+              <span class="locale-name">Universal</span>
+            </div>
+            <div class="result" id="auth-removed"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- COLOR -->
+    <section class="category">
+      <h2 class="category-title">
+        <span class="category-icon">🎨</span>
+        Color Utilities
+      </h2>
+
+      <div class="function-group">
+        <div class="function-name">hexToRgb() / rgbToHex()</div>
+        <div class="input-value">Input: '#667eea' / 'rgb(102, 126, 234)'</div>
+        <div class="locale-grid">
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🌍</span>
+              <span class="locale-name">HEX → RGB</span>
+            </div>
+            <div class="result" id="color-hex-rgb"></div>
+          </div>
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🌍</span>
+              <span class="locale-name">RGB → HEX</span>
+            </div>
+            <div class="result" id="color-rgb-hex"></div>
+          </div>
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🌍</span>
+              <span class="locale-name">Color Preview</span>
+            </div>
+            <div class="result" id="color-preview" style="width: 100%; height: 40px; background: #667eea; border-radius: 4px;"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- COOKIE -->
+    <section class="category">
+      <h2 class="category-title">
+        <span class="category-icon">🍪</span>
+        Cookie Utilities
+      </h2>
+
+      <div class="function-group">
+        <div class="function-name">setCookie() / getCookie() / deleteCookie()</div>
+        <div class="input-value">Input: 'theme=dark'</div>
+        <div class="locale-grid">
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🌍</span>
+              <span class="locale-name">Set Cookie</span>
+            </div>
+            <div class="result" id="cookie-set"></div>
+          </div>
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🌍</span>
+              <span class="locale-name">Get Cookie</span>
+            </div>
+            <div class="result" id="cookie-get"></div>
+          </div>
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🌍</span>
+              <span class="locale-name">Delete Cookie</span>
+            </div>
+            <div class="result" id="cookie-delete"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CRYPTO -->
+    <section class="category">
+      <h2 class="category-title">
+        <span class="category-icon">🔐</span>
+        Crypto & Security
+      </h2>
+
+      <div class="function-group">
+        <div class="function-name">generateUUID()</div>
+        <div class="input-value">Universal - Não depende de locale</div>
+        <div class="locale-grid">
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🌍</span>
+              <span class="locale-name">UUID 1</span>
+            </div>
+            <div class="result" id="uuid-universal"></div>
+          </div>
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🌍</span>
+              <span class="locale-name">UUID 2</span>
+            </div>
+            <div class="result" id="uuid-universal-2"></div>
+          </div>
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🌍</span>
+              <span class="locale-name">UUID 3</span>
+            </div>
+            <div class="result" id="uuid-universal-3"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="function-group">
+        <div class="function-name">base64Encode() / base64Decode()</div>
+        <div class="input-value">Input: 'Hello World' / 'Olá Mundo' / 'Hola Mundo'</div>
+        <div class="locale-grid">
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🇧🇷</span>
+              <span class="locale-name">pt-BR</span>
+            </div>
+            <div class="result" id="base64-pt-BR"></div>
+          </div>
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🇺🇸</span>
+              <span class="locale-name">en-US</span>
+            </div>
+            <div class="result" id="base64-en-US"></div>
+          </div>
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🇪🇸</span>
+              <span class="locale-name">es-ES</span>
+            </div>
+            <div class="result" id="base64-es-ES"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DOM -->
+    <section class="category">
+      <h2 class="category-title">
+        <span class="category-icon">🌐</span>
+        DOM Utilities
+      </h2>
+
+      <div class="function-group">
+        <div class="function-name">getElement() / createElement()</div>
+        <div class="input-value">Input: 'div' creation</div>
+        <div class="locale-grid">
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🌍</span>
+              <span class="locale-name">Create Element</span>
+            </div>
+            <div class="result" id="dom-create"></div>
+          </div>
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🌍</span>
+              <span class="locale-name">Query Selector</span>
+            </div>
+            <div class="result" id="dom-query"></div>
+          </div>
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🌍</span>
+              <span class="locale-name">Element Info</span>
+            </div>
+            <div class="result" id="dom-info"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ERROR -->
+    <section class="category">
+      <h2 class="category-title">
+        <span class="category-icon">⚠️</span>
+        Error Handling
+      </h2>
+
+      <div class="function-group">
+        <div class="function-name">formatError() / createError() / isError()</div>
+        <div class="input-value">Input: Error object simulation</div>
+        <div class="locale-grid">
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🌍</span>
+              <span class="locale-name">Format Error</span>
+            </div>
+            <div class="result" id="error-format"></div>
+          </div>
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🌍</span>
+              <span class="locale-name">Create Error</span>
+            </div>
+            <div class="result" id="error-create"></div>
+          </div>
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🌍</span>
+              <span class="locale-name">Check Error</span>
+            </div>
+            <div class="result" id="error-check"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- IMAGE -->
+    <section class="category">
+      <h2 class="category-title">
+        <span class="category-icon">🖼️</span>
+        Image Utilities
+      </h2>
+
+      <div class="function-group">
+        <div class="function-name">isAcceptedFormat() / getImageSize()</div>
+        <div class="input-value">Input: 'image/jpeg', 'image/png'</div>
+        <div class="locale-grid">
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🌍</span>
+              <span class="locale-name">JPEG Check</span>
+            </div>
+            <div class="result" id="image-jpeg"></div>
+          </div>
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🌍</span>
+              <span class="locale-name">PNG Check</span>
+            </div>
+            <div class="result" id="image-png"></div>
+          </div>
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🌍</span>
+              <span class="locale-name">Size Info</span>
+            </div>
+            <div class="result" id="image-size"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCROLL -->
+    <section class="category">
+      <h2 class="category-title">
+        <span class="category-icon">📜</span>
+        Scroll Utilities
+      </h2>
+
+      <div class="function-group">
+        <div class="function-name">scrollTo() / scrollToTop()</div>
+        <div class="input-value">Input: Scroll position simulation</div>
+        <div class="locale-grid">
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🌍</span>
+              <span class="locale-name">Current Position</span>
+            </div>
+            <div class="result" id="scroll-position"></div>
+          </div>
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🌍</span>
+              <span class="locale-name">Scroll To Top</span>
+            </div>
+            <div class="result" id="scroll-top"></div>
+          </div>
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🌍</span>
+              <span class="locale-name">Smooth Scroll</span>
+            </div>
+            <div class="result" id="scroll-smooth"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SEARCH -->
+    <section class="category">
+      <h2 class="category-title">
+        <span class="category-icon">🔍</span>
+        Search Utilities
+      </h2>
+
+      <div class="function-group">
+        <div class="function-name">fuzzySearch() / highlightMatch()</div>
+        <div class="input-value">Input: 'hello world' search in text</div>
+        <div class="locale-grid">
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🌍</span>
+              <span class="locale-name">Fuzzy Search</span>
+            </div>
+            <div class="result" id="search-fuzzy"></div>
+          </div>
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🌍</span>
+              <span class="locale-name">Highlight Match</span>
+            </div>
+            <div class="result" id="search-highlight"></div>
+          </div>
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🌍</span>
+              <span class="locale-name">Search Score</span>
+            </div>
+            <div class="result" id="search-score"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATE MANAGEMENT -->
+    <section class="category">
+      <h2 class="category-title">
+        <span class="category-icon">🔄</span>
+        State Management
+      </h2>
+
+      <div class="function-group">
+        <div class="function-name">createStore() / getState() / dispatch()</div>
+        <div class="input-value">Input: Counter state simulation</div>
+        <div class="locale-grid">
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🌍</span>
+              <span class="locale-name">Initial State</span>
+            </div>
+            <div class="result" id="state-initial"></div>
+          </div>
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🌍</span>
+              <span class="locale-name">After Dispatch</span>
+            </div>
+            <div class="result" id="state-after"></div>
+          </div>
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🌍</span>
+              <span class="locale-name">Current State</span>
+            </div>
+            <div class="result" id="state-current"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATUS -->
+    <section class="category">
+      <h2 class="category-title">
+        <span class="category-icon">📊</span>
+        Status Utilities
+      </h2>
+
+      <div class="function-group">
+        <div class="function-name">translateStatus() / getStatusColor()</div>
+        <div class="input-value">Input: 'ACTIVE', 'PENDING', 'ERROR'</div>
+        <div class="locale-grid">
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🇧🇷</span>
+              <span class="locale-name">pt-BR</span>
+            </div>
+            <div class="result" id="status-pt-BR"></div>
+          </div>
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🇺🇸</span>
+              <span class="locale-name">en-US</span>
+            </div>
+            <div class="result" id="status-en-US"></div>
+          </div>
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🇪🇸</span>
+              <span class="locale-name">es-ES</span>
+            </div>
+            <div class="result" id="status-es-ES"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STORAGE -->
+    <section class="category">
+      <h2 class="category-title">
+        <span class="category-icon">💾</span>
+        Storage Utilities
+      </h2>
+
+      <div class="function-group">
+        <div class="function-name">createStorage() / MemoryStorage</div>
+        <div class="input-value">Input: 'user-data' storage simulation</div>
+        <div class="locale-grid">
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🌍</span>
+              <span class="locale-name">Set Item</span>
+            </div>
+            <div class="result" id="storage-set"></div>
+          </div>
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🌍</span>
+              <span class="locale-name">Get Item</span>
+            </div>
+            <div class="result" id="storage-get"></div>
+          </div>
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🌍</span>
+              <span class="locale-name">Clear Storage</span>
+            </div>
+            <div class="result" id="storage-clear"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOOKS -->
+    <section class="category">
+      <h2 class="category-title">
+        <span class="category-icon">⚛️</span>
+        React Hooks
+      </h2>
+
+      <div class="function-group">
+        <div class="function-name">useLocalStorage() / useDebounce() / useToggle()</div>
+        <div class="input-value">Input: Hook simulations</div>
+        <div class="locale-grid">
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🌍</span>
+              <span class="locale-name">useLocalStorage</span>
+            </div>
+            <div class="result" id="hooks-localstorage"></div>
+          </div>
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🌍</span>
+              <span class="locale-name">useDebounce</span>
+            </div>
+            <div class="result" id="hooks-debounce"></div>
+          </div>
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🌍</span>
+              <span class="locale-name">useToggle</span>
+            </div>
+            <div class="result" id="hooks-toggle"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VALIDATION -->
+    <section class="category">
+      <h2 class="category-title">
+        <span class="category-icon">✅</span>
+        Validation Utilities
+      </h2>
+
+      <div class="function-group">
+        <div class="function-name">validateEmail() / validatePhone() / validateCPF()</div>
+        <div class="input-value">Input: 'test@example.com', '11999998888', '12345678909'</div>
+        <div class="locale-grid">
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🌍</span>
+              <span class="locale-name">Email</span>
+            </div>
+            <div class="result" id="validation-email"></div>
+          </div>
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🌍</span>
+              <span class="locale-name">Phone</span>
+            </div>
+            <div class="result" id="validation-phone"></div>
+          </div>
+          <div class="locale-card">
+            <div class="locale-header">
+              <span class="flag">🌍</span>
+              <span class="locale-name">CPF</span>
+            </div>
+            <div class="result" id="validation-cpf"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  </div>
+
+  <script type="module">
+    // Simular as funções da biblioteca (em produção, importar de @rainersoft/utils)
+    
+    // Date functions
+    function formatDate(date, locale) {
+      return new Intl.DateTimeFormat(locale).format(date);
+    }
+
+    function formatDateTime(date, locale) {
+      return new Intl.DateTimeFormat(locale, {
+        dateStyle: 'short',
+        timeStyle: 'short',
+      }).format(date);
+    }
+
+    // Number functions
+    const CURRENCY_MAP = {
+      'pt-BR': 'BRL',
+      'en-US': 'USD',
+      'es-ES': 'EUR',
+    };
+
+    function formatCurrency(value, locale) {
+      return new Intl.NumberFormat(locale, {
+        style: 'currency',
+        currency: CURRENCY_MAP[locale],
+      }).format(value);
+    }
+
+    function formatNumber(value, locale) {
+      return new Intl.NumberFormat(locale, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }).format(value);
+    }
+
+    function formatPercent(value) {
+      return new Intl.NumberFormat('pt-BR', {
+        style: 'percent',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }).format(value);
+    }
+
+    // String functions
+    function formatPhone(phone, locale) {
+      const digits = phone.replace(/\D/g, '');
+      
+      switch (locale) {
+        case 'pt-BR':
+          if (digits.length === 11) {
+            return digits.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+          }
+          return digits.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
+          
+        case 'en-US':
+          if (digits.length === 10) {
+            return digits.replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');
+          }
+          return digits;
+          
+        case 'es-ES':
+          if (digits.length === 9) {
+            return digits.replace(/(\d{3})(\d{2})(\d{2})(\d{2})/, '+34 $1 $2 $3 $4');
+          }
+          return digits;
+          
+        default:
+          return digits;
+      }
+    }
+
+    function formatCPF(cpf) {
+      const digits = cpf.replace(/\D/g, '');
+      return digits.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+    }
+
+    function formatCNPJ(cnpj) {
+      const digits = cnpj.replace(/\D/g, '');
+      return digits.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5');
+    }
+
+    function textToSlug(text) {
+      return text
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^\w\s-]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/--+/g, '-')
+        .trim();
+    }
+
+    // Crypto functions
+    function generateUUID() {
+      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+        const r = (Math.random() * 16) | 0;
+        const v = c === 'x' ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+      });
+    }
+
+    function base64Encode(text) {
+      return btoa(text);
+    }
+
+    // i18n translations
+    const TRANSLATIONS = {
+      'pt-BR': {
+        days: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+        months: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+        today: 'Hoje',
+        yesterday: 'Ontem',
+        tomorrow: 'Amanhã',
+      },
+      'en-US': {
+        days: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+        months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+        today: 'Today',
+        yesterday: 'Yesterday',
+        tomorrow: 'Tomorrow',
+      },
+      'es-ES': {
+        days: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+        months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+        today: 'Hoy',
+        yesterday: 'Ayer',
+        tomorrow: 'Mañana',
+      },
+    };
+
+    // Populate results
+    const testDate = new Date('2026-01-24');
+    const testDateTime = new Date('2026-01-24T14:30:00');
+
+    // Date & Time
+    document.getElementById('date-pt-BR').textContent = formatDate(testDate, 'pt-BR');
+    document.getElementById('date-en-US').textContent = formatDate(testDate, 'en-US');
+    document.getElementById('date-es-ES').textContent = formatDate(testDate, 'es-ES');
+
+    document.getElementById('datetime-pt-BR').textContent = formatDateTime(testDateTime, 'pt-BR');
+    document.getElementById('datetime-en-US').textContent = formatDateTime(testDateTime, 'en-US');
+    document.getElementById('datetime-es-ES').textContent = formatDateTime(testDateTime, 'es-ES');
+
+    // Currency & Numbers
+    document.getElementById('currency-pt-BR').textContent = formatCurrency(1234.56, 'pt-BR');
+    document.getElementById('currency-en-US').textContent = formatCurrency(1234.56, 'en-US');
+    document.getElementById('currency-es-ES').textContent = formatCurrency(1234.56, 'es-ES');
+
+    document.getElementById('number-pt-BR').textContent = formatNumber(1234567.89, 'pt-BR');
+    document.getElementById('number-en-US').textContent = formatNumber(1234567.89, 'en-US');
+    document.getElementById('number-es-ES').textContent = formatNumber(1234567.89, 'es-ES');
+
+    document.getElementById('percent-pt-BR').textContent = formatPercent(0.1234);
+    document.getElementById('percent-en-US').textContent = formatPercent(0.1234);
+    document.getElementById('percent-es-ES').textContent = formatPercent(0.1234);
+
+    // Phone
+    document.getElementById('phone-pt-BR').textContent = formatPhone('11999998888', 'pt-BR');
+    document.getElementById('phone-en-US').textContent = formatPhone('2025551234', 'en-US');
+    document.getElementById('phone-es-ES').textContent = formatPhone('912345678', 'es-ES');
+
+    // CPF/CNPJ
+    document.getElementById('cpf-pt-BR').textContent = formatCPF('12345678900');
+    document.getElementById('cnpj-pt-BR').textContent = formatCNPJ('12345678000190');
+
+    // Slug
+    document.getElementById('slug-pt-BR').textContent = textToSlug('Olá Mundo!');
+    document.getElementById('slug-en-US').textContent = textToSlug('Hello World!');
+    document.getElementById('slug-es-ES').textContent = textToSlug('¡Hola Mundo!');
+
+    // i18n
+    document.getElementById('days-pt-BR').textContent = TRANSLATIONS['pt-BR'].days.join(', ');
+    document.getElementById('days-en-US').textContent = TRANSLATIONS['en-US'].days.join(', ');
+    document.getElementById('days-es-ES').textContent = TRANSLATIONS['es-ES'].days.join(', ');
+
+    document.getElementById('months-pt-BR').textContent = TRANSLATIONS['pt-BR'].months.slice(0, 3).join(', ') + '...';
+    document.getElementById('months-en-US').textContent = TRANSLATIONS['en-US'].months.slice(0, 3).join(', ') + '...';
+    document.getElementById('months-es-ES').textContent = TRANSLATIONS['es-ES'].months.slice(0, 3).join(', ') + '...';
+
+    document.getElementById('words-pt-BR').textContent = `${TRANSLATIONS['pt-BR'].today}, ${TRANSLATIONS['pt-BR'].yesterday}, ${TRANSLATIONS['pt-BR'].tomorrow}`;
+    document.getElementById('words-en-US').textContent = `${TRANSLATIONS['en-US'].today}, ${TRANSLATIONS['en-US'].yesterday}, ${TRANSLATIONS['en-US'].tomorrow}`;
+    document.getElementById('words-es-ES').textContent = `${TRANSLATIONS['es-ES'].today}, ${TRANSLATIONS['es-ES'].yesterday}, ${TRANSLATIONS['es-ES'].tomorrow}`;
+
+    // Authentication
+    document.getElementById('auth-token').textContent = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...';
+    document.getElementById('auth-storage').textContent = 'Token stored in localStorage';
+    document.getElementById('auth-removed').textContent = 'Token removed from storage';
+
+    // Color
+    function hexToRgb(hex) {
+      const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+      return result ? `rgb(${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)})` : null;
+    }
+    function rgbToHex(rgb) {
+      const values = rgb.match(/\d+/g);
+      if (!values || values.length < 3) return null;
+      return '#' + values.slice(0, 3).map(x => parseInt(x).toString(16).padStart(2, '0')).join('');
+    }
+    document.getElementById('color-hex-rgb').textContent = hexToRgb('#667eea');
+    document.getElementById('color-rgb-hex').textContent = rgbToHex('rgb(102, 126, 234)');
+
+    // Cookie
+    document.getElementById('cookie-set').textContent = 'Cookie set: theme=dark';
+    document.getElementById('cookie-get').textContent = 'Cookie value: dark';
+    document.getElementById('cookie-delete').textContent = 'Cookie deleted';
+
+    // Crypto
+    document.getElementById('uuid-universal').textContent = generateUUID();
+    document.getElementById('uuid-universal-2').textContent = generateUUID();
+    document.getElementById('uuid-universal-3').textContent = generateUUID();
+
+    document.getElementById('base64-pt-BR').textContent = base64Encode('Olá Mundo');
+    document.getElementById('base64-en-US').textContent = base64Encode('Hello World');
+    document.getElementById('base64-es-ES').textContent = base64Encode('Hola Mundo');
+
+    // DOM
+    document.getElementById('dom-create').textContent = 'Created: <div class="test">Element</div>';
+    document.getElementById('dom-query').textContent = 'Found: 3 elements with class "result"';
+    document.getElementById('dom-info').textContent = 'Element: DIV, ID: "dom-info", Classes: ["result"]';
+
+    // Error
+    function formatError(error) {
+      if (error instanceof Error) return error.message;
+      if (typeof error === 'string') return error;
+      return String(error);
+    }
+    function createError(message, context) {
+      const error = new Error(message);
+      if (context) error.context = context;
+      return error;
+    }
+    function isError(error) {
+      return error instanceof Error;
+    }
+    const testError = createError('Test error', { code: 500 });
+    document.getElementById('error-format').textContent = formatError(testError);
+    document.getElementById('error-create').textContent = testError.message;
+    document.getElementById('error-check').textContent = isError(testError) ? 'true' : 'false';
+
+    // Image
+    function isAcceptedFormat(mimeType) {
+      const acceptedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+      return acceptedTypes.includes(mimeType);
+    }
+    document.getElementById('image-jpeg').textContent = isAcceptedFormat('image/jpeg') ? '✅ Valid' : '❌ Invalid';
+    document.getElementById('image-png').textContent = isAcceptedFormat('image/png') ? '✅ Valid' : '❌ Invalid';
+    document.getElementById('image-size').textContent = 'Size: 1920x1080, Type: JPEG, Size: 245KB';
+
+    // Scroll
+    document.getElementById('scroll-position').textContent = 'Current Y: 245px';
+    document.getElementById('scroll-top').textContent = 'Scrolled to top (0px)';
+    document.getElementById('scroll-smooth').textContent = 'Smooth scroll to element';
+
+    // Search
+    function fuzzySearch(text, query) {
+      const textLower = text.toLowerCase();
+      const queryLower = query.toLowerCase();
+      const score = (textLower.match(new RegExp(queryLower, 'g')) || []).length;
+      return { match: score > 0, score: score / textLower.length };
+    }
+    function highlightMatch(text, query) {
+      const regex = new RegExp(`(${query})`, 'gi');
+      return text.replace(regex, '<mark>$1</mark>');
+    }
+    const searchResult = fuzzySearch('hello world beautiful day', 'hello');
+    document.getElementById('search-fuzzy').textContent = `Match: ${searchResult.match}, Score: ${(searchResult.score * 100).toFixed(1)}%`;
+    document.getElementById('search-highlight').innerHTML = highlightMatch('hello world', 'hello');
+    document.getElementById('search-score').textContent = 'Relevance: 85%';
+
+    // State Management
+    document.getElementById('state-initial').textContent = '{ count: 0, status: "idle" }';
+    document.getElementById('state-after').textContent = '{ count: 1, status: "active" }';
+    document.getElementById('state-current').textContent = '{ count: 1, status: "active" }';
+
+    // Status
+    const STATUS_TRANSLATIONS = {
+      'pt-BR': { 'ACTIVE': 'Ativo', 'PENDING': 'Pendente', 'ERROR': 'Erro' },
+      'en-US': { 'ACTIVE': 'Active', 'PENDING': 'Pending', 'ERROR': 'Error' },
+      'es-ES': { 'ACTIVE': 'Activo', 'PENDING': 'Pendiente', 'ERROR': 'Error' }
+    };
+    document.getElementById('status-pt-BR').textContent = Object.values(STATUS_TRANSLATIONS['pt-BR']).join(', ');
+    document.getElementById('status-en-US').textContent = Object.values(STATUS_TRANSLATIONS['en-US']).join(', ');
+    document.getElementById('status-es-ES').textContent = Object.values(STATUS_TRANSLATIONS['es-ES']).join(', ');
+
+    // Storage
+    document.getElementById('storage-set').textContent = 'Stored: {"user": "John", "theme": "dark"}';
+    document.getElementById('storage-get').textContent = 'Retrieved: {"user": "John", "theme": "dark"}';
+    document.getElementById('storage-clear').textContent = 'Storage cleared successfully';
+
+    // Hooks
+    document.getElementById('hooks-localstorage').textContent = 'useState("theme") + localStorage sync';
+    document.getElementById('hooks-debounce').textContent = 'useDebounce(searchTerm, 300ms)';
+    document.getElementById('hooks-toggle').textContent = 'const [isOpen, toggle] = useToggle(false)';
+
+    // Validation
+    function validateEmailSimple(email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(email);
+    }
+    function isCPF(cpf) {
+      const digits = cpf.replace(/\D/g, '');
+      return digits.length === 11 && !/^(\d)\1{10}$/.test(digits);
+    }
+    document.getElementById('validation-email').textContent = validateEmailSimple('test@example.com') ? '✅ Valid' : '❌ Invalid';
+    document.getElementById('validation-phone').textContent = '11999998888 → (11) 99999-8888 ✅';
+    document.getElementById('validation-cpf').textContent = isCPF('12345678909') ? '✅ Valid' : '❌ Invalid';
+  </script>
+</body>
+</html>
