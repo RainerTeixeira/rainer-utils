@@ -23,12 +23,30 @@ function isEmpty(text) {
 function wordCount(text) {
   return text.trim().split(/\s+/).filter((word) => word.length > 0).length;
 }
-function formatPhone(phone) {
+function formatPhone(phone, locale = "pt-BR") {
   const digits = phone.replace(/\D/g, "");
-  if (digits.length === 11) {
-    return digits.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
+  switch (locale) {
+    case "pt-BR":
+      if (digits.length === 11) {
+        return digits.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
+      }
+      return digits.replace(/(\d{2})(\d{4})(\d{4})/, "($1) $2-$3");
+    case "en-US":
+      if (digits.length === 10) {
+        return digits.replace(/(\d{3})(\d{3})(\d{4})/, "($1) $2-$3");
+      }
+      if (digits.length === 11 && digits.startsWith("1")) {
+        return digits.replace(/(\d{1})(\d{3})(\d{3})(\d{4})/, "+$1 ($2) $3-$4");
+      }
+      return digits;
+    case "es-ES":
+      if (digits.length === 9) {
+        return digits.replace(/(\d{3})(\d{2})(\d{2})(\d{2})/, "+34 $1 $2 $3 $4");
+      }
+      return digits;
+    default:
+      return digits;
   }
-  return digits.replace(/(\d{2})(\d{4})(\d{4})/, "($1) $2-$3");
 }
 function formatCPF(cpf) {
   const digits = cpf.replace(/\D/g, "");

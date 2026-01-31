@@ -214,4 +214,5 @@ export function detectBrowserLocale(): Locale {
 }
 
 // Re-export tipos e constantes
-export { Locale, DEFAULT_LOCALE, CURRENCY_MAP } from '../types';
+export type { Locale } from '../types';
+export { DEFAULT_LOCALE, CURRENCY_MAP } from '../types';
