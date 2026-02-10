@@ -1,0 +1,11 @@
+export declare const addDays: (date: Date, days: number) => Date;
+export declare const addMonths: (date: Date, months: number) => Date;
+export declare const addYears: (date: Date, years: number) => Date;
+export declare const diffDays: (date1: Date, date2: Date) => number;
+export declare const isToday: (date: Date) => boolean;
+export declare const isSameDay: (date1: Date, date2: Date) => boolean;
+export declare const startOfDay: (date: Date) => Date;
+export declare const endOfDay: (date: Date) => Date;
+export declare const startOfMonth: (date: Date) => Date;
+export declare const endOfMonth: (date: Date) => Date;
+//# sourceMappingURL=helpers.d.ts.map
