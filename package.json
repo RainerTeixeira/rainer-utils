@@ -1,139 +1,45 @@
 {
   "name": "@rainersoft/utils",
   "version": "3.0.0",
-  "description": "Utilitários universais para formatação, conversão e manipulação de dados",
-  "packageManager": "pnpm@10.28.2+sha512.41872f037ad22f7348e3b1debbaf7e867cfd448f2726d9cf74c08f19507c31d2c8e7a11525b983febc2df640b5438dee6023ebb1f84ed43cc2d654d2bc326264",
-  "author": {
-    "name": "Rainer Teixeira",
-    "email": "suporte@rainersoft.com.br"
-  },
-  "license": "MIT",
-  "keywords": [
-    "utils",
-    "utilities",
-    "formatters",
-    "date",
-    "string",
-    "number",
-    "currency",
-    "slug",
-    "status",
-    "typescript"
-  ],
+  "description": "Utilitários compartilhados para o ecossistema Rainer ERP",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js"
-    },
-    "./hooks": {
-      "types": "./dist/hooks/index.d.ts",
-      "import": "./dist/hooks/index.mjs",
-      "require": "./dist/hooks/index.js"
-    },
-    "./hooks/useAuth": {
-      "types": "./dist/hooks/useAuth.d.ts",
-      "import": "./dist/hooks/useAuth.mjs",
-      "require": "./dist/hooks/useAuth.js"
-    },
-    "./hooks/use-password-strength": {
-      "types": "./dist/hooks/use-password-strength.d.ts",
-      "import": "./dist/hooks/use-password-strength.mjs",
-      "require": "./dist/hooks/use-password-strength.js"
-    },
-    "./hooks/use-smooth-scroll": {
-      "types": "./dist/hooks/use-smooth-scroll.d.ts",
-      "import": "./dist/hooks/use-smooth-scroll.mjs",
-      "require": "./dist/hooks/use-smooth-scroll.js"
-    },
-    "./hooks/use-scroll-position": {
-      "types": "./dist/hooks/use-scroll-position.d.ts",
-      "import": "./dist/hooks/use-scroll-position.mjs",
-      "require": "./dist/hooks/use-scroll-position.js"
-    },
-    "./hooks/use-mobile": {
-      "types": "./dist/hooks/use-mobile.d.ts",
-      "import": "./dist/hooks/use-mobile.mjs",
-      "require": "./dist/hooks/use-mobile.js"
-    },
-    "./date": {
-      "types": "./dist/date/index.d.ts",
-      "import": "./dist/date/index.mjs",
-      "require": "./dist/date/index.js"
-    },
-    "./string": {
-      "types": "./dist/string/index.d.ts",
-      "import": "./dist/string/index.mjs",
-      "require": "./dist/string/index.js"
-    },
-    "./number": {
-      "types": "./dist/number/index.d.ts",
-      "import": "./dist/number/index.mjs",
-      "require": "./dist/number/index.js"
-    },
-    "./status": {
-      "types": "./dist/status/index.d.ts",
-      "import": "./dist/status/index.mjs",
-      "require": "./dist/status/index.js"
-    },
-    "./auth": {
-      "types": "./dist/auth/index.d.ts",
-      "import": "./dist/auth/index.mjs",
-      "require": "./dist/auth/index.js"
-    },
-    "./search": {
-      "types": "./dist/search/index.d.ts",
-      "import": "./dist/search/index.mjs",
-      "require": "./dist/search/index.js"
-    },
-    "./storage": {
-      "types": "./dist/storage/index.d.ts",
-      "import": "./dist/storage.mjs",
-      "require": "./dist/storage.js"
-    }
-  },
   "files": [
-    "dist",
-    "README.md",
-    "LICENSE"
+    "dist"
   ],
   "scripts": {
     "dev": "tsup --watch",
-    "build": "tsup && npx tsc --project tsconfig.dts.json",
-    "build:dts": "npx tsc --project tsconfig.dts.json",
+    "build": "tsup",
     "test": "jest",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage",
-    "lint": "eslint src --ext .ts",
-    "format": "prettier --write \"src/**/*.ts\"",
-    "typecheck": "tsc --noEmit",
-    "changelog": "tsx scripts/generate-changelog.ts",
-    "version": "tsx scripts/generate-changelog.ts && git add docs/98-CHANGELOG.md package.json",
-    "release": "tsx scripts/release-package.ts",
-    "release:dry-run": "tsx scripts/release-package.ts --dry-run",
-    "release:validate": "tsx scripts/release-package.ts --validate-only"
+    "lint": "eslint src --ext .ts,.tsx",
+    "clean": "rimraf dist"
   },
-  "peerDependencies": {
-    "react": "^18.0.0 || ^19.0.0"
-  },
-  "publishConfig": {
-    "access": "public"
-  },
+  "keywords": [
+    "utils",
+    "typescript",
+    "erp"
+  ],
+  "author": "RainerSoft",
+  "license": "UNLICENSED",
   "devDependencies": {
-    "@types/jest": "^29.5.12",
-    "@types/node": "^20.19.25",
-    "@types/react": "^19.2.8",
-    "@typescript-eslint/eslint-plugin": "^7.0.1",
-    "@typescript-eslint/parser": "^7.0.1",
-    "eslint": "^8.56.0",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^20.19.30",
+    "eslint": "^8.57.1",
     "jest": "^29.7.0",
-    "prettier": "^3.2.5",
-    "ts-jest": "^29.1.2",
+    "rimraf": "^5.0.10",
+    "ts-jest": "^29.4.6",
     "tsup": "^8.5.1",
-    "tsx": "^4.21.0",
     "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "date-fns": "^4.1.0"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
   }
 }
