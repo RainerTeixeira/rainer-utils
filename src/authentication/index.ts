@@ -1,5 +1,5 @@
 /**
- * Auth Utilities
+ * Utilitários de Autenticação
  *
  * Utilitários para gerenciamento de tokens de autenticação.
  * Funções para armazenar, recuperar e remover tokens JWT do localStorage.

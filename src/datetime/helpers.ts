@@ -1,5 +1,5 @@
 /**
- * DateTime Helper Utilities
+ * Utilitários Auxiliares de Data e Hora
  *
  * Utilitários adicionais para manipulação de datas e horas.
  * Complementa o módulo datetime existente com funções de cálculo e comparação.

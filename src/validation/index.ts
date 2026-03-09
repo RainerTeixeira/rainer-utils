@@ -1,5 +1,5 @@
 /**
- * Validation Utilities
+ * Utilitários de Validação
  *
  * Utilitários para validação de dados com suporte a múltiplos idiomas.
  * Funções puras, sem dependências externas, prontas para qualquer plataforma.

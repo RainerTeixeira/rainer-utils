@@ -1,5 +1,5 @@
 /**
- * Crypto Utilities
+ * Utilitários de Criptografia
  *
  * Utilitários para criptografia, hash e geração de IDs únicos.
  * Funciona tanto no browser quanto no Node.js.

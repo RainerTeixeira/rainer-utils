@@ -32,17 +32,17 @@ export * from './search';
 export * from './image';
 export * from './cookie';
 export * from './hooks'; // ✅ NOVO: Hooks migrados
-export * from './crypto'; // ✅ NOVO: Crypto utilities
-export * from './storage'; // ✅ NOVO: Storage utilities
-export * from './i18n'; // ✅ NOVO: Internationalization
+export * from './crypto'; // ✅ NOVO: Utilitários de Criptografia
+export * from './storage'; // ✅ NOVO: Utilitários de Armazenamento
+export * from './i18n'; // ✅ NOVO: Internacionalização
 
-// Formatting utilities (BR) - apenas máscaras brasileiras
+// Utilitários de Formatação (BR) - apenas máscaras brasileiras
 export { 
   formatCEP
 } from './formatting';
 
 // ============================================================================
-// STRING UTILITIES (sem conflitos)
+// UTILITÁRIOS DE STRING (sem conflitos)
 // ============================================================================
 export { 
   textToSlug, 

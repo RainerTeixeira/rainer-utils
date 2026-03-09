@@ -1,5 +1,5 @@
 /**
- * Date Utilities
+ * Utilitários de Data
  *
  * Utilitários para formatação e manipulação de datas.
  * Suporte para múltiplos idiomas: pt-BR, en-US, es-ES.

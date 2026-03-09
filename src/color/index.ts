@@ -1,5 +1,5 @@
 /**
- * Color Utilities
+ * Utilitários de Cor
  * 
  * Utilitários para manipulação e conversão de cores.
  * Inclui funções para conversão entre formatos, ajuste de cores e cálculos.
@@ -10,7 +10,7 @@
  */
 
 // ============================================================================
-// COLOR CONVERSION
+// CONVERSÃO DE COR
 // ============================================================================
 
 /**
@@ -151,7 +151,7 @@ export function hslToHex(h: number, s: number, l: number): string {
 }
 
 // ============================================================================
-// COLOR MANIPULATION
+// MANIPULAÇÃO DE COR
 // ============================================================================
 
 /**
